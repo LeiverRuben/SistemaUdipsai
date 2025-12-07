@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acceso – Sistema UDIPSAI</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <style>
+    /* PALETA DE COLORES OFICIAL UCACUE */
+    :root {
+      --ucacue-red: #E30613;
+      /* Rojo corporativo */
+      --ucacue-dark: #333333;
+      /* Gris oscuro para textos */
+      --ucacue-gray: #666666;
+      /* Gris medio para subtítulos */
+      --bg-light: #F5F5F5;
+      /* Fondo claro */
+      --white: #FFFFFF;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      height: 100vh;
+      display: flex;
+      background: var(--bg-light);
+      overflow: hidden;
+    }
+
+    /* ===== SECCIÓN IZQUIERDA (IMAGEN CORPORATIVA) ===== */
+    .login-left {
+      flex: 1.4;
+      /* Imagen ilustrativa de la universidad con filtro rojo */
+      background-image: linear-gradient(rgba(227, 6, 19, 0.85), rgba(51, 51, 51, 0.9)),
+        url('/img/portada-login.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px;
+      color: var(--white);
+      position: relative;
+    }
+
+    .login-left h1 {
+      font-size: 3.2rem;
+      font-weight: 700;
+      margin-bottom: 25px;
+      line-height: 1.1;
+    }
+
+    .login-left p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      max-width: 600px;
+      line-height: 1.6;
+      font-weight: 300;
+    }
+
+    /* Franja inferior roja */
+    .login-left::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 10px;
+      background: var(--ucacue-red);
+    }
+
+    /* ===== SECCIÓN DERECHA (FORMULARIO) ===== */
+    .login-right {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--white);
+      padding: 50px;
+      position: relative;
+      box-shadow: -5px 0 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .login-box {
+      width: 100%;
+      max-width: 420px;
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .logo-area {
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .logo-area img {
+      height: 80px;
+      margin-bottom: 25px;
+    }
+
+    .logo-area h2 {
+      color: var(--ucacue-dark);
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .logo-area p {
+      color: var(--ucacue-gray);
+      font-size: 1rem;
+    }
+
+    .logo-area strong {
+      color: var(--ucacue-red);
+    }
+
+    /* Inputs */
+    .input-group {
+      margin-bottom: 30px;
+      position: relative;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--ucacue-dark);
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .input-wrapper i {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #999;
+      font-size: 1.2rem;
+      transition: 0.3s;
+    }
+
+    .input-wrapper input {
+      width: 100%;
+      padding: 16px 16px 16px 50px;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      font-size: 1rem;
+      transition: 0.3s;
+      background: #fafafa;
+      outline: none;
+      color: var(--ucacue-dark);
+    }
+
+    .input-wrapper input:focus {
+      border-color: var(--ucacue-red);
+      background: var(--white);
+      box-shadow: 0 0 0 4px rgba(227, 6, 19, 0.1);
+    }
+
+    .input-wrapper input:focus+i {
+      color: var(--ucacue-red);
+    }
+
+    /* Botón ROJO */
+    button {
+      width: 100%;
+      padding: 18px;
+      background: var(--ucacue-red);
+      color: var(--white);
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-top: 10px;
+      box-shadow: 0 10px 20px rgba(227, 6, 19, 0.2);
+    }
+
+    button:hover {
+      background: #c20510;
+      transform: translateY(-3px);
+    }
+
+    .error-msg {
+      color: var(--ucacue-red);
+      font-size: 0.95rem;
+      margin-top: 25px;
+      text-align: center;
+      display: none;
+      font-weight: 500;
+      background: #fff0f0;
+      padding: 15px;
+      border-radius: 10px;
+      border: 1px solid #ffcfcf;
+    }
+
+    .copyright {
+      position: absolute;
+      bottom: 25px;
+      text-align: center;
+      width: 100%;
+      color: var(--ucacue-gray);
+      font-size: 0.85rem;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 1024px) {
+      .login-left {
+        display: none;
+      }
+
+      .login-right {
+        flex: 1;
+        background: var(--bg-light);
+      }
+
+      .login-box {
+        background: var(--white);
+        padding: 50px;
+        border-radius: 25px;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="login-left">
+    <h1>Unidad de diagnostico investigación psicopedagogica con apoyo a la inclusión</h1>
+    <p>Repositorio de inventario de test y juegos udipsai <br> Tecnología al servicio de la salud mental.</p>
+  </div>
+
+  <div class="login-right">
+    <div class="login-box">
+
+      <div class="logo-area">
+        <img src="/img/logo-udipsai.jpg" alt="Logo UCACUE UDIPSAI">
+        <h2>Bienvenido</h2>
+        <p>Acceso al Sistema <strong>UDIPSAI</strong></p>
+      </div>
+
+      <form id="loginForm">
+        <div class="input-group">
+          <label for="cedula">Cédula de Identidad</label>
+          <div class="input-wrapper">
+            <i class="fas fa-user-md"></i>
+            <input type="text" id="cedula" name="cedula" placeholder="Ingrese su cédula" required autocomplete="off">
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label for="password">Contraseña</label>
+          <div class="input-wrapper">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="password" name="password" placeholder="Ingrese su contraseña" required>
+          </div>
+        </div>
+
+        <button type="submit">Iniciar Sesión</button>
+      </form>
+
+      <div id="loginError" class="error-msg" aria-live="polite"></div>
+    </div>
+
+    <div class="copyright">
+      &copy; 2025 Universidad Católica de Cuenca - UDIPSAI
+    </div>
+  </div>
+
+  <script src="/js/login.js"></script>
+</body>
+
+</html>

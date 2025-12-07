@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel Principal – UDIPSAI</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    /* PALETA UCACUE */
+    :root {
+      --primary: #E30613;
+      /* Rojo Institucional */
+      --secondary: #333333;
+      /* Gris Oscuro / Negro */
+      --bg-light: #F5F5F5;
+      --sidebar-bg: #FFFFFF;
+      --text-gray: #666666;
+      --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+      text-decoration: none;
+    }
+
+    body {
+      background: var(--bg-light);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 260px;
+      background: var(--sidebar-bg);
+      position: fixed;
+      height: 100%;
+      padding: 25px 20px;
+      z-index: 100;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .sidebar h2 {
+      text-align: center;
+      margin-bottom: 40px;
+      color: var(--primary);
+      font-weight: 700;
+      letter-spacing: 1px;
+      font-size: 1.8rem;
+    }
+
+    .sidebar ul {
+      list-style: none;
+    }
+
+    .sidebar li {
+      margin: 8px 0;
+    }
+
+    .sidebar a {
+      color: var(--text-gray);
+      display: flex;
+      align-items: center;
+      padding: 12px 15px;
+      border-radius: 8px;
+      transition: 0.3s;
+      font-weight: 500;
+      text-decoration: none;
+    }
+
+    .sidebar a:hover,
+    .sidebar a.active {
+      background: var(--primary);
+      color: white;
+      transform: translateX(5px);
+      box-shadow: 0 4px 10px rgba(227, 6, 19, 0.3);
+    }
+
+    .sidebar i {
+      width: 35px;
+      font-size: 1.2rem;
+    }
+
+    /* MAIN */
+    .main-content {
+      margin-left: 260px;
+      width: calc(100% - 260px);
+      padding: 40px;
+    }
+
+    /* HEADER */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+      background: white;
+      padding: 15px 40px;
+      border-radius: 15px;
+      box-shadow: var(--card-shadow);
+      border-left: 5px solid var(--primary);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .header-logo {
+      height: 60px;
+      border-radius: 8px;
+    }
+
+    .user-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .user-info h4 {
+      font-size: 1rem;
+      color: var(--secondary);
+      margin-bottom: 2px;
+    }
+
+    .user-info small {
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+
+    .btn-logout {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-logout:hover {
+      background: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    /* BANNER */
+    .welcome-banner {
+      background: linear-gradient(135deg, var(--secondary), #000);
+      color: white;
+      padding: 40px;
+      border-radius: 20px;
+      margin-bottom: 40px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .welcome-banner h1 {
+      color: var(--primary);
+      font-size: 2rem;
+      margin-bottom: 5px;
+    }
+
+    /* CARDS */
+    .modules-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+    }
+
+    .module-card {
+      background: white;
+      padding: 35px;
+      border-radius: 20px;
+      box-shadow: var(--card-shadow);
+      transition: 0.4s;
+      cursor: pointer;
+      border-top: 5px solid var(--secondary);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .module-card:hover {
+      transform: translateY(-8px);
+      border-top-color: var(--primary);
+    }
+
+    .icon-box {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #f8f9fa;
+      color: var(--secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      transition: 0.3s;
+    }
+
+    .module-card:hover .icon-box {
+      background: var(--primary);
+      color: white;
+    }
+
+    .arrow-link {
+      margin-top: 20px;
+      color: var(--primary);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="sidebar">
+    <h2>UDIPSAI</h2>
+    <ul>
+      <li><a href="#" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
+      <li><a href="tests.html"><i class="fas fa-clipboard-check"></i> Tests</a></li>
+      <li><a href="juegos.html"><i class="fas fa-gamepad"></i> Juegos</a></li>
+
+      <li id="btnAdmin" style="display: none;">
+        <a href="admin.html"><i class="fas fa-users-cog"></i> Gestión Usuarios</a>
+      </li>
+
+      <li><a href="guia.html"><i class="fas fa-book-reader"></i> Guía de Uso</a></li>
+      <li><a href="configuracion.html"><i class="fas fa-cog"></i> Configuración</a></li>
+    </ul>
+  </nav>
+
+  <main class="main-content">
+    <header>
+      <div class="header-left">
+        <img src="/img/logo-udipsai.jpg" alt="Logo UCACUE" class="header-logo">
+
+        <div style="display: flex; flex-direction: column; gap: 0;">
+          <h2 style="font-size: 1.5rem; color: var(--secondary); margin: 0;">Panel de Control</h2>
+          <small style="color: var(--text-gray); margin: 0;">Selecciona un módulo para comenzar</small>
+        </div>
+      </div>
+
+      <div class="user-wrapper">
+        <div class="user-info" style="text-align: right;">
+          <h4 id="nombreUsuarioDisplay">Cargando...</h4>
+          <small id="rolUsuarioDisplay" style="color: var(--primary);">Rol</small>
+        </div>
+        <button id="logoutBtn" class="btn-logout" title="Salir"><i class="fas fa-power-off"></i></button>
+      </div>
+    </header>
+
+    <div class="welcome-banner">
+      <h1>¡Hola de nuevo!</h1>
+      <p>Bienvenido al Repositorio de Pruebas y Juegos Cognitivos.</p>
+    </div>
+
+    <div class="modules-grid">
+      <div class="module-card" onclick="window.location.href='tests.html'">
+        <div class="icon-box"><i class="fas fa-clipboard-list"></i></div>
+        <h3>Tests Psicológicos</h3>
+        <p>Banco de pruebas estandarizadas y manuales de aplicación.</p>
+        <div class="arrow-link">Acceder <i class="fas fa-arrow-right"></i></div>
+      </div>
+
+      <div class="module-card" onclick="window.location.href='juegos.html'">
+        <div class="icon-box"><i class="fas fa-gamepad"></i></div>
+        <h3>Juegos Cognitivos</h3>
+        <p>Actividades interactivas de estimulación y rehabilitación.</p>
+        <div class="arrow-link">Acceder <i class="fas fa-arrow-right"></i></div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // 1. Verificar sesión
+    const token = localStorage.getItem("token");
+    const nombre = localStorage.getItem("nombreUsuario");
+    const rol = localStorage.getItem("rolUsuario"); // CRUCIAL para RBAC
+
+    if (!token || !nombre) {
+      window.location.href = "/";
+    } else {
+      document.getElementById("nombreUsuarioDisplay").textContent = nombre;
+      // Mostrar rol capitalizado
+      const rolCapitalizado = rol.charAt(0).toUpperCase() + rol.slice(1);
+      document.getElementById("rolUsuarioDisplay").textContent = rolCapitalizado;
+    }
+
+    // 2. Mostrar botón de Admin si corresponde
+    if (rol === 'admin') {
+      document.getElementById('btnAdmin').style.display = 'block';
+    }
+
+    // 3. Cerrar Sesión
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      localStorage.clear();
+      window.location.href = "/";
+    });
+  </script>
+</body>
+
+</html>

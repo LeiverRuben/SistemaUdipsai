@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juegos Cognitivos – UDIPSAI</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        /* ===== ESTILOS GENERALES (DISEÑO UCACUE) ===== */
+        :root {
+            --primary-color: #E30613;
+            --secondary-color: #333333;
+            --accent-color: #BF0410;
+            --bg-light: #F5F5F5;
+            --text-dark: #2d3436;
+            --text-gray: #636e72;
+            --sidebar-width: 260px;
+            --card-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            text-decoration: none;
+        }
+
+        body {
+            background: var(--bg-light);
+            display: flex;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: #FFF;
+            color: white;
+            position: fixed;
+            height: 100%;
+            padding: 25px 20px;
+            z-index: 100;
+            box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 50px;
+            letter-spacing: 1px;
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: var(--primary-color);
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            margin: 10px 0;
+        }
+
+        .sidebar a {
+            color: var(--text-gray);
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-radius: 12px;
+            transition: 0.3s;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background: var(--primary-color);
+            color: white;
+            transform: translateX(5px);
+            box-shadow: 0 4px 10px rgba(227, 6, 19, 0.3);
+        }
+
+        .sidebar i {
+            width: 35px;
+            font-size: 1.2rem;
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* HEADER */
+        header {
+            background: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            z-index: 10;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-logo {
+            height: 45px;
+            border-radius: 6px;
+        }
+
+        .header-title h3 {
+            font-size: 1.2rem;
+            color: var(--text-dark);
+            margin-bottom: 0;
+        }
+
+        .header-title p {
+            font-size: 0.8rem;
+            color: var(--text-gray);
+            margin: 0;
+        }
+
+        .user-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        /* BARRA DE CONTROL */
+        .games-control-bar {
+            background: white;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #eee;
+        }
+
+        .game-selector {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .game-btn {
+            background: #fff;
+            border: 2px solid #f1f2f6;
+            padding: 8px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-gray);
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .game-btn:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .game-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            box-shadow: 0 5px 15px rgba(227, 6, 19, 0.2);
+        }
+
+        .game-btn.download-mode.active {
+            background: var(--secondary-color);
+            border-color: var(--secondary-color);
+            box-shadow: 0 5px 15px rgba(51, 51, 51, 0.2);
+        }
+
+        /* ZONA VISUALIZACIÓN */
+        .display-area {
+            flex-grow: 1;
+            width: 100%;
+            position: relative;
+            background: #eef2f5;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* CARD "LAUNCHER" (Diseño Limpio para abrir en pestaña nueva) */
+        .blocked-game-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            text-align: center;
+            padding: 20px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .blocked-icon {
+            font-size: 5rem;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+
+        .launch-btn {
+            background: var(--primary-color);
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            margin-top: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            box-shadow: 0 10px 20px rgba(227, 6, 19, 0.2);
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .launch-btn:hover {
+            background: var(--accent-color);
+            transform: translateY(-3px);
+        }
+
+        /* DESCARGAS */
+        .downloads-wrapper {
+            display: none;
+            padding: 40px;
+            background: var(--bg-light);
+            flex-grow: 1;
+            overflow-y: auto;
+            justify-content: center;
+        }
+
+        .download-card {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-bottom: 5px solid var(--primary-color);
+            max-width: 450px;
+            width: 100%;
+            height: fit-content;
+        }
+
+        .download-icon {
+            font-size: 4rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .download-link-btn {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        .download-link-btn:hover {
+            background: var(--accent-color);
+            box-shadow: 0 5px 15px rgba(227, 6, 19, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="sidebar">
+        <h2>UDIPSAI</h2>
+        <ul>
+            <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="tests.html"><i class="fas fa-clipboard-check"></i> Tests</a></li>
+            <li><a href="#" class="active"><i class="fas fa-gamepad"></i> Juegos</a></li>
+            <li id="btnAdmin" style="display: none;"><a href="admin.html"><i class="fas fa-users-cog"></i> Gestión
+                    Usuarios</a></li>
+            <li><a href="guia.html"><i class="fas fa-book-reader"></i> Guía de Uso</a></li>
+            <li><a href="configuracion.html"><i class="fas fa-cog"></i> Configuración</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <header>
+            <div class="header-left">
+                <img src="/img/logo-udipsai.jpg" alt="Logo" class="header-logo">
+                <div class="header-text">
+                    <h3>Módulo de Juegos</h3>
+                    <p>Actividades interactivas</p>
+                </div>
+            </div>
+            <div class="user-wrapper">
+                <span id="nombreUsuarioDisplay">Cargando...</span>
+            </div>
+        </header>
+
+        <div class="games-control-bar">
+            <span style="font-weight: 600; color: var(--text-dark);">Selecciona:</span>
+            <div class="game-selector">
+                <button class="game-btn active" onclick="verJuego('estimulacion', this)">
+                    <i class="fas fa-puzzle-piece"></i> Estimulación
+                </button>
+                <button class="game-btn" onclick="verJuego('palabras', this)">
+                    <i class="fas fa-font"></i> Palabras
+                </button>
+                <button class="game-btn download-mode" onclick="verDescargas(this)">
+                    <i class="fas fa-download"></i> Descargar (.exe)
+                </button>
+            </div>
+        </div>
+
+        <div class="display-area">
+
+            <div id="launcherView" class="blocked-game-card">
+                <div class="blocked-icon"><i class="fas fa-gamepad"></i></div>
+                <h2 id="gameTitle" style="color: var(--primary-color); margin-bottom: 10px;">Juego Seleccionado</h2>
+                <p id="gameDesc" style="color: var(--text-gray); max-width: 500px;">Descripción de la actividad.</p>
+
+                <a id="launchLink" href="#" target="_blank" class="launch-btn">
+                    <i class="fas fa-play"></i> Iniciar Juego
+                </a>
+            </div>
+
+            <div id="downloadView" class="downloads-wrapper">
+                <div class="downloads-container">
+                    <div class="download-card">
+                        <i class="fas fa-desktop"
+                            style="font-size: 4rem; color: var(--primary-color); margin-bottom: 20px;"></i>
+                        <h3 style="color: var(--text-dark); margin-bottom: 10px;">Entrenamiento Cognitivo</h3>
+                        <p style="color: var(--text-gray);">Versión de escritorio para jugar sin conexión.</p>
+                        <a href="/descargas/JuegoEscritorio.zip" class="download-link-btn" download>
+                            <i class="fas fa-download"></i> Descargar .ZIP
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const token = localStorage.getItem("token"), rol = localStorage.getItem("rolUsuario"), nombre = localStorage.getItem("nombreUsuario");
+        if (!token) window.location.href = "/";
+        else document.getElementById("nombreUsuarioDisplay").textContent = nombre;
+        if (rol === 'admin') document.getElementById('btnAdmin').style.display = 'block';
+
+        // Referencias
+        const launcherView = document.getElementById('launcherView');
+        const downloadView = document.getElementById('downloadView');
+        const launchLink = document.getElementById('launchLink');
+        const gameTitle = document.getElementById('gameTitle');
+        const gameDesc = document.getElementById('gameDesc');
+
+        // Iniciar con el primero
+        verJuego('estimulacion', document.querySelector('.game-btn.active'));
+
+        function verJuego(tipo, btn) {
+            ocultarTodo();
+            actBtn(btn);
+
+            // Mostrar siempre el Launcher (sin iframe)
+            launcherView.style.display = 'flex';
+
+            if (tipo === 'estimulacion') {
+                gameTitle.textContent = "Estimulación Cognitiva";
+                gameDesc.textContent = "Actividad interactiva de memoria y atención.";
+                launchLink.href = "https://proyecto-vinculacion.vercel.app/";
+            }
+            else if (tipo === 'palabras') {
+                gameTitle.textContent = "Juego de Palabras";
+                gameDesc.textContent = "Actividad de vocabulario y agilidad mental.";
+                launchLink.href = "https://sistemajuegodepalabras.vercel.app/";
+            }
+        }
+
+        function verDescargas(btn) {
+            ocultarTodo();
+            actBtn(btn);
+            downloadView.style.display = 'flex';
+        }
+
+        function ocultarTodo() {
+            launcherView.style.display = 'none';
+            downloadView.style.display = 'none';
+        }
+
+        function actBtn(btn) {
+            document.querySelectorAll('.game-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+    </script>
+</body>
+
+</html>

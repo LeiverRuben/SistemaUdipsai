@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banco de Pruebas – UDIPSAI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        /* ESTILOS UCACUE */
+        :root {
+            --primary-color: #E30613;
+            --secondary-color: #333333;
+            --accent-color: #BF0410;
+            --bg-light: #F5F5F5;
+            --text-dark: #2d3436;
+            --text-gray: #636e72;
+            --sidebar-width: 260px;
+            --card-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: var(--bg-light);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: #FFF;
+            color: white;
+            position: fixed;
+            height: 100%;
+            padding: 25px 20px;
+            z-index: 100;
+            box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 50px;
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: var(--primary-color);
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            margin: 10px 0;
+        }
+
+        .sidebar a {
+            color: var(--text-gray);
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-radius: 12px;
+            transition: 0.3s;
+            font-size: 0.95rem;
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background: var(--primary-color);
+            color: white;
+            transform: translateX(5px);
+            box-shadow: 0 4px 10px rgba(227, 6, 19, 0.3);
+        }
+
+        .sidebar i {
+            width: 35px;
+            font-size: 1.2rem;
+        }
+
+        /* MAIN */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* HEADER */
+        header {
+            background: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            z-index: 10;
+            margin-bottom: 20px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-logo {
+            height: 45px;
+            border-radius: 6px;
+        }
+
+        .header-title h3 {
+            font-size: 1.2rem;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .header-title p {
+            font-size: 0.8rem;
+            color: var(--text-gray);
+            margin: 0;
+        }
+
+        .user-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        /* ÁREA DE CONTENIDO */
+        .content-area {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 40px;
+            background: #eef2f5;
+        }
+
+        .section-title {
+            margin-bottom: 30px;
+            color: var(--secondary-color);
+            font-size: 1.5rem;
+            font-weight: 600;
+            border-left: 5px solid var(--primary-color);
+            padding-left: 15px;
+        }
+
+        /* GRID DE DESCARGAS (4 ELEMENTOS) */
+        .downloads-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .download-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-bottom: 5px solid var(--secondary-color);
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        .download-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .download-icon {
+            font-size: 3.5rem;
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+        }
+
+        .download-card h3 {
+            font-size: 1.2rem;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .download-card p {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .download-link-btn {
+            display: inline-block;
+            background: var(--secondary-color);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+
+        .download-link-btn:hover {
+            background: var(--primary-color);
+            box-shadow: 0 5px 15px rgba(227, 6, 19, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="sidebar">
+        <h2>UDIPSAI</h2>
+        <ul>
+            <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="#" class="active"><i class="fas fa-clipboard-check"></i> Tests</a></li>
+            <li><a href="juegos.html"><i class="fas fa-gamepad"></i> Juegos</a></li>
+            <li id="btnAdmin" style="display: none;"><a href="admin.html"><i class="fas fa-users-cog"></i> Gestión
+                    Usuarios</a></li>
+            <li><a href="guia.html"><i class="fas fa-book-reader"></i> Guía de Uso</a></li>
+            <li><a href="configuracion.html"><i class="fas fa-cog"></i> Configuración</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <header>
+            <div class="header-left">
+                <img src="/img/logo-udipsai.jpg" alt="Logo" class="header-logo">
+                <div class="header-text">
+                    <h3>Batería de Pruebas</h3>
+                    <p>Instrumentos de Evaluación</p>
+                </div>
+            </div>
+            <div class="user-wrapper">
+                <span id="nombreUsuarioDisplay">Cargando...</span>
+            </div>
+        </header>
+
+        <div class="content-area">
+            <h2 class="section-title">Software de Evaluación (PC)</h2>
+            <p style="margin-bottom: 30px; color: #666;">Descarga las aplicaciones de escritorio para realizar las
+                evaluaciones sin conexión a internet.</p>
+
+            <div class="downloads-grid">
+
+                <div class="download-card">
+                    <div>
+                        <div class="download-icon"><i class="fas fa-brain"></i></div>
+                        <h3>UDIPSAI 0.1.1</h3>
+                    </div>
+                    <a href="/descargas/UDIPSAI 0.1.1.zip" class="download-link-btn" download><i
+                            class="fas fa-download"></i>
+                        Descargar</a>
+                </div>
+
+                <div class="download-card">
+                    <div>
+                        <div class="download-icon"><i class="fas fa-child"></i></div>
+                        <h3>UDIPSAI</h3>
+                    </div>
+                    <a href="/descargas/UDIPSAI.zip" class="download-link-btn" download><i class="fas fa-download"></i>
+                        Descargar</a>
+                </div>
+
+                <div class="download-card">
+                    <div>
+                        <div class="download-icon"><i class="fas fa-user-clock"></i></div>
+                        <h3>Test de Atención</h3>
+                        <p>Medición de tiempos de reacción y atención sostenida.</p>
+                    </div>
+                    <a href="/descargas/Test3.zip" class="download-link-btn" download><i class="fas fa-download"></i>
+                        Descargar</a>
+                </div>
+
+                <div class="download-card">
+                    <div>
+                        <div class="download-icon"><i class="fas fa-clipboard-list"></i></div>
+                        <h3>Cuestionario Clínico</h3>
+                        <p>Herramienta automatizada para entrevistas y diagnósticos.</p>
+                    </div>
+                    <a href="/descargas/Test4.zip" class="download-link-btn" download><i class="fas fa-download"></i>
+                        Descargar</a>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const token = localStorage.getItem("token"), rol = localStorage.getItem("rolUsuario"), nombre = localStorage.getItem("nombreUsuario");
+        if (!token) window.location.href = "/";
+        else document.getElementById("nombreUsuarioDisplay").textContent = nombre;
+        if (rol === 'admin') document.getElementById('btnAdmin').style.display = 'block';
+    </script>
+</body>
+
+</html>

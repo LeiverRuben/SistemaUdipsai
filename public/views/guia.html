@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía de Uso – UDIPSAI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #E30613;
+            --secondary: #333;
+            --bg-light: #F5F5F5;
+            --sidebar-bg: #FFF;
+            --text-gray: #666;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: var(--bg-light);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: var(--sidebar-bg);
+            position: fixed;
+            height: 100%;
+            padding: 25px 20px;
+            z-index: 100;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: var(--primary);
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            margin: 8px 0;
+        }
+
+        .sidebar a {
+            color: var(--text-gray);
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border-radius: 8px;
+            transition: 0.3s;
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background: var(--primary);
+            color: white;
+            transform: translateX(5px);
+            box-shadow: 0 4px 10px rgba(227, 6, 19, 0.3);
+        }
+
+        .sidebar i {
+            width: 35px;
+            font-size: 1.2rem;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            width: calc(100% - 260px);
+            padding: 40px;
+        }
+
+        header {
+            background: white;
+            padding: 15px 40px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            margin-bottom: 40px;
+            border-left: 5px solid var(--primary);
+        }
+
+        .header-logo {
+            height: 50px;
+        }
+
+        .header-text h2 {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            margin: 0;
+        }
+
+        .guide-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: white;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+            overflow: hidden;
+            border-left: 5px solid var(--primary);
+        }
+
+        summary {
+            padding: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--secondary);
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        summary:hover {
+            background: #f8f9fa;
+            color: var(--primary);
+        }
+
+        summary::after {
+            content: '\f078';
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            transition: transform 0.3s;
+            color: #ccc;
+        }
+
+        details[open] summary::after {
+            transform: rotate(180deg);
+            color: var(--primary);
+        }
+
+        .faq-content {
+            padding: 0 20px 20px 20px;
+            color: var(--text-gray);
+            line-height: 1.6;
+            border-top: 1px solid #f1f2f6;
+        }
+
+        .faq-content strong {
+            color: var(--primary);
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="sidebar">
+        <h2>UDIPSAI</h2>
+        <ul>
+            <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="tests.html"><i class="fas fa-clipboard-check"></i> Tests</a></li>
+            <li><a href="juegos.html"><i class="fas fa-gamepad"></i> Juegos</a></li>
+            <li id="btnAdmin" style="display: none;"><a href="admin.html"><i class="fas fa-users-cog"></i> Gestión
+                    Usuarios</a></li>
+            <li><a href="#" class="active"><i class="fas fa-book-reader"></i> Guía de Uso</a></li>
+            <li><a href="configuracion.html"><i class="fas fa-cog"></i> Configuración</a></li>
+        </ul>
+    </nav>
+    <main class="main-content">
+        <header>
+            <img src="/img/logo-udipsai.jpg" alt="Logo" class="header-logo">
+            <div class="header-text">
+                <h2>Centro de Ayuda</h2>
+                <p>Preguntas frecuentes y soporte técnico</p>
+            </div>
+        </header>
+        <div class="guide-container">
+            <details class="faq-item">
+                <summary>¿Cómo inicio una evaluación?</summary>
+                <div class="faq-content">Ve a <strong>Tests</strong> y selecciona la prueba.</div>
+            </details>
+            <details class="faq-item">
+                <summary>¿Qué hago si olvido mi contraseña?</summary>
+                <div class="faq-content">Contacta al <strong>Administrador (Gabriela)</strong> para resetearla.</div>
+            </details>
+            <details class="faq-item">
+                <summary>¿Problemas con los juegos?</summary>
+                <div class="faq-content">Usa el enlace "Abrir en pestaña nueva" si no cargan.</div>
+            </details>
+        </div>
+    </main>
+    <script>
+        const token = localStorage.getItem("token"), rol = localStorage.getItem("rolUsuario");
+        if (!token) window.location.href = "/";
+        if (rol === 'admin') document.getElementById('btnAdmin').style.display = 'block';
+    </script>
+</body>
+
+</html>

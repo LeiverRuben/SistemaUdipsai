@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuración – UDIPSAI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        :root {
+            --primary: #E30613;
+            --secondary: #333;
+            --bg-light: #F5F5F5;
+            --sidebar-bg: #FFF;
+            --text-gray: #666;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: var(--bg-light);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: var(--sidebar-bg);
+            position: fixed;
+            height: 100%;
+            padding: 25px 20px;
+            z-index: 100;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: var(--primary);
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            margin: 8px 0;
+        }
+
+        .sidebar a {
+            color: var(--text-gray);
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border-radius: 8px;
+            transition: 0.3s;
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background: var(--primary);
+            color: white;
+            transform: translateX(5px);
+            box-shadow: 0 4px 10px rgba(227, 6, 19, 0.3);
+        }
+
+        .sidebar i {
+            width: 35px;
+            font-size: 1.2rem;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            width: calc(100% - 260px);
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .config-card {
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border-top: 5px solid var(--primary);
+            max-width: 500px;
+            width: 100%;
+            margin-top: 40px;
+        }
+
+        .config-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .config-header h2 {
+            color: var(--secondary);
+            margin-bottom: 5px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--secondary);
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            transition: 0.3s;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary);
+        }
+
+        .btn-save {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .btn-save:hover {
+            background: #b0050f;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="sidebar">
+        <h2>UDIPSAI</h2>
+        <ul>
+            <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="tests.html"><i class="fas fa-clipboard-check"></i> Tests</a></li>
+            <li><a href="juegos.html"><i class="fas fa-gamepad"></i> Juegos</a></li>
+            <li id="btnAdmin" style="display: none;"><a href="admin.html"><i class="fas fa-users-cog"></i> Gestión
+                    Usuarios</a></li>
+            <li><a href="guia.html"><i class="fas fa-book-reader"></i> Guía de Uso</a></li>
+            <li><a href="#" class="active"><i class="fas fa-cog"></i> Configuración</a></li>
+        </ul>
+    </nav>
+    <main class="main-content">
+        <div class="config-card">
+            <div class="config-header">
+                <h2>Cambiar Contraseña</h2>
+                <p style="color:#666;">Seguridad de cuenta</p>
+            </div>
+            <form id="configForm">
+                <div class="form-group"><label>Actual</label><input type="password" id="passActual" required></div>
+                <div class="form-group"><label>Nueva</label><input type="password" id="passNueva" required></div>
+                <div class="form-group"><label>Confirmar</label><input type="password" id="passConfirm" required></div>
+                <button type="submit" class="btn-save">Actualizar</button>
+            </form>
+        </div>
+    </main>
+    <script>
+        const token = localStorage.getItem("token"), rol = localStorage.getItem("rolUsuario");
+        if (!token) window.location.href = "/";
+        if (rol === 'admin') document.getElementById('btnAdmin').style.display = 'block';
+
+        function parseJwt(t) { try { return JSON.parse(atob(t.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))) } catch (e) { return null } }
+        const user = parseJwt(token);
+
+        document.getElementById("configForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const passActual = document.getElementById("passActual").value, passNueva = document.getElementById("passNueva").value, passConfirm = document.getElementById("passConfirm").value;
+            if (passNueva !== passConfirm) return Swal.fire('Error', 'No coinciden', 'error');
+
+            Swal.fire({ title: 'Guardando...', didOpen: () => { Swal.showLoading() } });
+            try {
+                const res = await fetch("/api/auth/actualizar-password", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: user.id, passwordActual: passActual, nuevaPassword: passNueva }) });
+                if (res.ok) { Swal.fire('Éxito', 'Contraseña actualizada', 'success'); document.getElementById("configForm").reset(); }
+                else Swal.fire('Error', 'Datos incorrectos', 'error');
+            } catch (e) { Swal.fire('Error', 'Fallo de conexión', 'error'); }
+        });
+    </script>
+</body>
+
+</html>

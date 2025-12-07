@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Personal – UDIPSAI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        :root {
+            --primary: #E30613;
+            --secondary: #333;
+            --bg-light: #F5F5F5;
+            --sidebar-bg: #FFF;
+            --text-gray: #666;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: var(--bg-light);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 260px;
+            background: var(--sidebar-bg);
+            position: fixed;
+            height: 100%;
+            padding: 25px 20px;
+            z-index: 100;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: var(--primary);
+            font-weight: 700;
+            letter-spacing: 1px;
+            font-size: 1.8rem;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            margin: 10px 0;
+        }
+
+        .sidebar a {
+            color: var(--text-gray);
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-radius: 12px;
+            transition: 0.3s;
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background: var(--primary);
+            color: white;
+            transform: translateX(5px);
+            box-shadow: 0 4px 10px rgba(227, 6, 19, 0.3);
+        }
+
+        .sidebar i {
+            width: 35px;
+            font-size: 1.2rem;
+        }
+
+        /* MAIN */
+        .main-content {
+            margin-left: 260px;
+            width: calc(100% - 260px);
+            padding: 40px;
+        }
+
+        /* HEADER */
+        header {
+            background: white;
+            padding: 15px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            margin-bottom: 40px;
+            border-left: 5px solid var(--primary);
+        }
+
+        .header-logo {
+            height: 50px;
+        }
+
+        .header-text h2 {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            margin: 0;
+        }
+
+        .header-text p {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+        }
+
+        .btn-new {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
+        }
+
+        .btn-new:hover {
+            background: #b0050f;
+            transform: translateY(-2px);
+        }
+
+        /* TABLA */
+        .table-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            padding: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            border-bottom: 2px solid #f1f2f6;
+        }
+
+        th {
+            text-align: left;
+            padding: 20px;
+            color: var(--primary);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+
+        td {
+            padding: 20px;
+            border-bottom: 1px solid #f1f2f6;
+            color: #2d3436;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr:hover {
+            background-color: #fff5f5;
+        }
+
+        .badge {
+            padding: 6px 12px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+
+        .badge-admin {
+            background: #333;
+            color: #fff;
+        }
+
+        .badge-psico {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .badge-otro {
+            background: #e3f2fd;
+            color: #006064;
+        }
+
+        /* Color para roles nuevos */
+
+        .btn-icon {
+            background: #fff;
+            border: 1px solid #eee;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-right: 5px;
+            color: var(--text-gray);
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn-icon:hover {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #ff7675;
+            color: white;
+            border-color: #ff7675;
+        }
+
+        .swal2-input,
+        .swal2-select {
+            width: 80% !important;
+            margin: 10px auto !important;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="sidebar">
+        <h2>UDIPSAI</h2>
+        <ul>
+            <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="tests.html"><i class="fas fa-clipboard-check"></i> Tests</a></li>
+            <li><a href="juegos.html"><i class="fas fa-gamepad"></i> Juegos</a></li>
+            <li><a href="#" class="active"><i class="fas fa-users-cog"></i> Gestión Usuarios</a></li>
+            <li><a href="guia.html"><i class="fas fa-book-reader"></i> Guía de Uso</a></li>
+            <li><a href="configuracion.html"><i class="fas fa-cog"></i> Configuración</a></li>
+        </ul>
+    </nav>
+    <main class="main-content">
+        <header>
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <img src="/img/logo-udipsai.jpg" alt="Logo" class="header-logo">
+                <div class="header-text">
+                    <h2>Administración de Personal</h2>
+                    <p>Control de accesos y seguridad</p>
+                </div>
+            </div>
+            <button class="btn-new" onclick="crearUsuario()"><i class="fas fa-user-plus"></i> Nuevo Usuario</button>
+        </header>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Cédula</th>
+                        <th>Rol</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaUsuarios">
+                    <tr>
+                        <td colspan="4" style="text-align: center;">Cargando...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+    <script>
+        const token = localStorage.getItem("token"), rol = localStorage.getItem("rolUsuario");
+        if (!token) window.location.href = "/";
+        if (rol !== 'admin') window.location.href = "dashboard.html";
+
+        document.addEventListener('DOMContentLoaded', cargarUsuarios);
+
+        async function cargarUsuarios() {
+            try {
+                const res = await fetch('/api/usuarios');
+                const users = await res.json();
+                const tbody = document.getElementById('tablaUsuarios');
+                tbody.innerHTML = '';
+                users.forEach(u => {
+                    const badgeClass = (u.rol === 'admin') ? 'badge-admin' : (u.rol === 'psicologo' ? 'badge-psico' : 'badge-otro');
+                    // Capitalizar primera letra
+                    const rolText = u.rol.charAt(0).toUpperCase() + u.rol.slice(1);
+
+                    tbody.innerHTML += `<tr>
+                        <td><strong>${u.nombre}</strong></td>
+                        <td>${u.cedula}</td>
+                        <td><span class="badge ${badgeClass}">${rolText}</span></td>
+                        <td>
+                            <button class="btn-icon" onclick="editar(${u.id}, '${u.nombre}', '${u.rol}')" title="Editar"><i class="fas fa-edit"></i></button>
+                            <button class="btn-icon" onclick="resetear(${u.id}, '${u.nombre}')" title="Resetear Clave"><i class="fas fa-key"></i></button>
+                            <button class="btn-icon btn-delete" onclick="eliminar(${u.id}, '${u.nombre}')" title="Eliminar"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>`;
+                });
+            } catch (e) { console.error(e); }
+        }
+
+        // --- OBTENER ROLES PARA EL SELECT ---
+        async function getRolesOptions(rolSeleccionado = '') {
+            try {
+                const res = await fetch('/api/usuarios/roles/lista');
+                const roles = await res.json();
+                if (!roles.includes('admin')) roles.push('admin');
+                if (!roles.includes('psicologo')) roles.push('psicologo');
+
+                // Ordenar y quitar duplicados
+                const uniqueRoles = [...new Set(roles)].sort();
+
+                let html = '';
+                uniqueRoles.forEach(r => {
+                    const selected = r === rolSeleccionado ? 'selected' : '';
+                    // Capitalizar para que se vea bonito en la lista
+                    const label = r.charAt(0).toUpperCase() + r.slice(1);
+                    html += `<option value="${r}" ${selected}>${label}</option>`;
+                });
+                // Opción especial para crear nuevo
+                html += `<option value="__NUEVO__">➕ Crear Nuevo Rol...</option>`;
+                return html;
+            } catch (e) {
+                return `<option value="psicologo">Psicólogo</option><option value="admin">Admin</option><option value="__NUEVO__">➕ Crear Nuevo Rol...</option>`;
+            }
+        }
+
+        // --- CREAR / EDITAR (Lógica Unificada) ---
+        async function abrirModalUsuario(id = null, nombre = '', rolActual = '') {
+            const isEdit = id !== null;
+            const title = isEdit ? 'Editar Usuario' : 'Nuevo Usuario';
+            const confirmText = isEdit ? 'Guardar Cambios' : 'Crear Usuario';
+
+            const rolesOptions = await getRolesOptions(rolActual || 'psicologo');
+
+            const { value: formValues } = await Swal.fire({
+                title: title,
+                html:
+                    `<input id="swal-nombre" class="swal2-input" placeholder="Nombre Completo" value="${nombre}">` +
+                    (isEdit ? '' : `<input id="swal-cedula" class="swal2-input" placeholder="Cédula">`) +
+                    `<select id="swal-rol" class="swal2-select" onchange="checkNuevoRol(this)">${rolesOptions}</select>` +
+                    `<input id="swal-rol-nuevo" class="swal2-input" placeholder="Escribe el nuevo rol" style="display:none;">`,
+                focusConfirm: false,
+                showCancelButton: true,
+                confirmButtonText: confirmText,
+                confirmButtonColor: '#E30613',
+                preConfirm: () => {
+                    const rolSelect = document.getElementById('swal-rol').value;
+                    const rolNuevo = document.getElementById('swal-rol-nuevo').value;
+
+                    return {
+                        nombre: document.getElementById('swal-nombre').value,
+                        cedula: isEdit ? null : document.getElementById('swal-cedula').value,
+                        // Si eligió "Nuevo", usamos el input de texto, si no, el del select
+                        rol: rolSelect === '__NUEVO__' ? rolNuevo.toLowerCase() : rolSelect
+                    }
+                }
+            });
+
+            if (formValues) {
+                // Validaciones
+                if (!formValues.nombre || (!isEdit && !formValues.cedula) || !formValues.rol) {
+                    return Swal.fire('Error', 'Completa todos los campos', 'error');
+                }
+
+                try {
+                    const url = isEdit ? `/api/usuarios/${id}` : '/api/usuarios';
+                    const method = isEdit ? 'PUT' : 'POST';
+
+                    const res = await fetch(url, {
+                        method: method,
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(formValues)
+                    });
+                    const data = await res.json();
+
+                    if (res.ok) {
+                        Swal.fire(isEdit ? 'Actualizado' : 'Creado', data.mensaje || 'Operación exitosa', 'success');
+                        cargarUsuarios();
+                    } else {
+                        Swal.fire('Error', data.error, 'error');
+                    }
+                } catch (e) { Swal.fire('Error', 'Fallo de conexión', 'error'); }
+            }
+        }
+
+        // --- HELPERS PARA EL MODAL ---
+        // Esta función se llama cuando cambias el select. Si eliges "Nuevo", muestra el input.
+        window.checkNuevoRol = function (select) {
+            const inputNuevo = document.getElementById('swal-rol-nuevo');
+            if (select.value === '__NUEVO__') {
+                inputNuevo.style.display = 'block';
+                inputNuevo.focus();
+            } else {
+                inputNuevo.style.display = 'none';
+                inputNuevo.value = '';
+            }
+        };
+
+        // Wrappers para llamar desde los botones HTML
+        function crearUsuario() { abrirModalUsuario(); }
+        function editar(id, nombre, rol) { abrirModalUsuario(id, nombre, rol); }
+
+        function resetear(id, nombre) {
+            Swal.fire({ title: '¿Resetear contraseña?', text: `Volverá a ser la cédula de ${nombre}`, icon: 'warning', showCancelButton: true, confirmButtonColor: '#E30613', confirmButtonText: 'Sí' }).then(async r => {
+                if (r.isConfirmed) { await fetch(`/api/usuarios/${id}/reset`, { method: 'PUT' }); Swal.fire('Listo', 'Contraseña restablecida', 'success'); }
+            });
+        }
+
+        function eliminar(id, nombre) {
+            Swal.fire({ title: '¿Eliminar usuario?', icon: 'error', showCancelButton: true, confirmButtonColor: '#E30613', confirmButtonText: 'Eliminar' }).then(async r => {
+                if (r.isConfirmed) { const res = await fetch(`/api/usuarios/${id}`, { method: 'DELETE' }); if (res.ok) { Swal.fire('Eliminado', '', 'success'); cargarUsuarios(); } }
+            });
+        }
+    </script>
+</body>
+
+</html>
