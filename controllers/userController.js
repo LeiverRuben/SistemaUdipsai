@@ -172,3 +172,17 @@ export const obtenerRoles = async (req, res) => {
         res.status(500).json({ error: "Error al obtener roles" });
     }
 };
+// 8. RENOMBRAR O MIGRAR ROLES (¡NUEVO!)
+export const actualizarNombreRol = async (req, res) => {
+    const { rolViejo, rolNuevo } = req.body;
+    try {
+        // Busca todos los usuarios con el rol viejo y se los cambia al nuevo
+        const [afectados] = await Usuario.update(
+            { rol: rolNuevo },
+            { where: { rol: rolViejo } }
+        );
+        res.json({ mensaje: `Rol actualizado en ${afectados} usuarios.` });
+    } catch (error) {
+        res.status(500).json({ error: "Error al actualizar roles" });
+    }
+};

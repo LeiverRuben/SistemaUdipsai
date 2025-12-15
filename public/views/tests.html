@@ -5,9 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Banco de Pruebas – UDIPSAI</title>
+
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
         /* ESTILOS UCACUE */
         :root {
@@ -26,6 +28,7 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Poppins', sans-serif;
+            text-decoration: none;
         }
 
         body {
@@ -34,7 +37,6 @@
             min-height: 100vh;
         }
 
-        /* SIDEBAR */
         .sidebar {
             width: var(--sidebar-width);
             background: #FFF;
@@ -71,7 +73,6 @@
             transition: 0.3s;
             font-size: 0.95rem;
             font-weight: 500;
-            text-decoration: none;
         }
 
         .sidebar a:hover,
@@ -87,7 +88,6 @@
             font-size: 1.2rem;
         }
 
-        /* MAIN */
         .main-content {
             margin-left: var(--sidebar-width);
             width: calc(100% - var(--sidebar-width));
@@ -97,7 +97,6 @@
             height: 100vh;
         }
 
-        /* HEADER */
         header {
             background: white;
             padding: 15px 30px;
@@ -106,7 +105,6 @@
             align-items: center;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
             z-index: 10;
-            margin-bottom: 20px;
         }
 
         .header-left {
@@ -140,7 +138,6 @@
             color: var(--text-dark);
         }
 
-        /* ÁREA DE CONTENIDO */
         .content-area {
             flex-grow: 1;
             overflow-y: auto;
@@ -157,7 +154,6 @@
             padding-left: 15px;
         }
 
-        /* GRID DE DESCARGAS (4 ELEMENTOS) */
         .downloads-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -230,10 +226,14 @@
             <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
             <li><a href="#" class="active"><i class="fas fa-clipboard-check"></i> Tests</a></li>
             <li><a href="juegos.html"><i class="fas fa-gamepad"></i> Juegos</a></li>
+
             <li id="btnAdmin" style="display: none;"><a href="admin.html"><i class="fas fa-users-cog"></i> Gestión
                     Usuarios</a></li>
+            <li id="btnRecursos" style="display: none;"><a href="recursos.html"><i class="fas fa-cloud-upload-alt"></i>
+                    Subir Recursos</a></li>
+
             <li><a href="guia.html"><i class="fas fa-book-reader"></i> Guía de Uso</a></li>
-            <li><a href="configuracion.html"><i class="fas fa-cog"></i> Configuración</a></li>
+            <li><a href="configuracion.html"><i class="fas fa-shield-alt"></i> Seguridad</a></li>
         </ul>
     </nav>
 
@@ -262,6 +262,7 @@
                     <div>
                         <div class="download-icon"><i class="fas fa-brain"></i></div>
                         <h3>UDIPSAI 0.1.1</h3>
+                        <p>Software de evaluación neuropsicológica.</p>
                     </div>
                     <a href="/descargas/UDIPSAI 0.1.1.zip" class="download-link-btn" download><i
                             class="fas fa-download"></i>
@@ -271,41 +272,60 @@
                 <div class="download-card">
                     <div>
                         <div class="download-icon"><i class="fas fa-child"></i></div>
-                        <h3>UDIPSAI</h3>
+                        <h3>UDIPSAI_LECTURA_Y_MAS</h3>
+                        <p>Software de evaluación lectura y más.</p>
                     </div>
-                    <a href="/descargas/UDIPSAI.zip" class="download-link-btn" download><i class="fas fa-download"></i>
+                    <a href="/descargas/UDIPSAI_LECTURA_Y_MAS.zip" class="download-link-btn" download><i
+                            class="fas fa-download"></i>
                         Descargar</a>
                 </div>
 
                 <div class="download-card">
                     <div>
                         <div class="download-icon"><i class="fas fa-user-clock"></i></div>
-                        <h3>Test de Atención</h3>
-                        <p>Medición de tiempos de reacción y atención sostenida.</p>
+                        <h3>TEST ESTILOS DE APRENDIZAJE </h3>
+                        <p>Software de evaluación de estilos de aprendizaje.</p>
                     </div>
-                    <a href="/descargas/Test3.zip" class="download-link-btn" download><i class="fas fa-download"></i>
+                    <a href="/descargas/TEST ESTILOS DE APRENDIZAJE .zip" class="download-link-btn" download><i
+                            class="fas fa-download"></i>
                         Descargar</a>
                 </div>
 
                 <div class="download-card">
                     <div>
                         <div class="download-icon"><i class="fas fa-clipboard-list"></i></div>
-                        <h3>Cuestionario Clínico</h3>
-                        <p>Herramienta automatizada para entrevistas y diagnósticos.</p>
+                        <h3>TEST FUNCIONES BASICAS </h3>
+                        <p>Software de evaluación de funciones básicas.</p>
                     </div>
-                    <a href="/descargas/Test4.zip" class="download-link-btn" download><i class="fas fa-download"></i>
+                    <a href="/descargas/TEST FUNCIONES BASICAS.zip" class="download-link-btn" download><i
+                            class="fas fa-download"></i>
                         Descargar</a>
                 </div>
-
+                <div class="download-card">
+                    <div>
+                        <div class="download-icon"><i class="fas fa-clipboard-check"></i></div>
+                        <h3>TEST PROYECTOUDIPSAI </h3>
+                        <p>Software de evaluación de proyecto Udipsai.</p>
+                    </div>
+                    <a href="/descargas/TEST PROYECTOUDIPSAI.zip" class="download-link-btn" download><i
+                            class="fas fa-download"></i>
+                        Descargar</a>
+                </div>
             </div>
-        </div>
     </main>
 
     <script>
         const token = localStorage.getItem("token"), rol = localStorage.getItem("rolUsuario"), nombre = localStorage.getItem("nombreUsuario");
         if (!token) window.location.href = "/";
         else document.getElementById("nombreUsuarioDisplay").textContent = nombre;
-        if (rol === 'admin') document.getElementById('btnAdmin').style.display = 'block';
+
+        // Lógica de Admin (Flexible)
+        if (rol && rol.toLowerCase().includes('admin')) {
+            const btnAdmin = document.getElementById('btnAdmin');
+            const btnRecursos = document.getElementById('btnRecursos');
+            if (btnAdmin) btnAdmin.style.display = 'block';
+            if (btnRecursos) btnRecursos.style.display = 'block';
+        }
     </script>
 </body>
 

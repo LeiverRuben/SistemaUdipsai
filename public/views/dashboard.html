@@ -13,9 +13,7 @@
     /* PALETA UCACUE */
     :root {
       --primary: #E30613;
-      /* Rojo Institucional */
       --secondary: #333333;
-      /* Gris Oscuro / Negro */
       --bg-light: #F5F5F5;
       --sidebar-bg: #FFFFFF;
       --text-gray: #666666;
@@ -72,7 +70,6 @@
       border-radius: 8px;
       transition: 0.3s;
       font-weight: 500;
-      text-decoration: none;
     }
 
     .sidebar a:hover,
@@ -119,6 +116,18 @@
       border-radius: 8px;
     }
 
+    .header-text h2 {
+      font-size: 1.5rem;
+      color: var(--secondary);
+      margin: 0;
+    }
+
+    .header-text p {
+      font-size: 0.9rem;
+      color: var(--text-gray);
+      margin: 0;
+    }
+
     .user-wrapper {
       display: flex;
       align-items: center;
@@ -129,31 +138,31 @@
       font-size: 1rem;
       color: var(--secondary);
       margin-bottom: 2px;
+      text-align: right;
     }
 
     .user-info small {
       color: var(--primary);
       font-weight: 600;
       font-size: 0.8rem;
+      display: block;
+      text-align: right;
     }
 
     .btn-logout {
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 10px 20px;
+      background: #fff0f0;
+      color: var(--primary);
+      border: 1px solid #ffcccc;
+      padding: 10px;
       border-radius: 8px;
       cursor: pointer;
       transition: 0.3s;
-      font-size: 0.9rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      font-size: 1.1rem;
     }
 
     .btn-logout:hover {
-      background: var(--accent);
-      transform: translateY(-2px);
+      background: var(--primary);
+      color: white;
     }
 
     /* BANNER */
@@ -196,6 +205,7 @@
     .module-card:hover {
       transform: translateY(-8px);
       border-top-color: var(--primary);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     }
 
     .icon-box {
@@ -240,8 +250,12 @@
         <a href="admin.html"><i class="fas fa-users-cog"></i> Gestión Usuarios</a>
       </li>
 
+      <li id="btnRecursos" style="display: none;">
+        <a href="recursos.html"><i class="fas fa-cloud-upload-alt"></i> Subir Recursos</a>
+      </li>
+
       <li><a href="guia.html"><i class="fas fa-book-reader"></i> Guía de Uso</a></li>
-      <li><a href="configuracion.html"><i class="fas fa-cog"></i> Configuración</a></li>
+      <li><a href="configuracion.html"><i class="fas fa-shield-alt"></i> Seguridad</a></li>
     </ul>
   </nav>
 
@@ -249,15 +263,14 @@
     <header>
       <div class="header-left">
         <img src="/img/logo-udipsai.jpg" alt="Logo UCACUE" class="header-logo">
-
-        <div style="display: flex; flex-direction: column; gap: 0;">
-          <h2 style="font-size: 1.5rem; color: var(--secondary); margin: 0;">Panel de Control</h2>
-          <small style="color: var(--text-gray); margin: 0;">Selecciona un módulo para comenzar</small>
+        <div class="header-text">
+          <h2>Panel de Control</h2>
+          <p>Universidad Católica de Cuenca</p>
         </div>
       </div>
 
       <div class="user-wrapper">
-        <div class="user-info" style="text-align: right;">
+        <div class="user-info">
           <h4 id="nombreUsuarioDisplay">Cargando...</h4>
           <small id="rolUsuarioDisplay" style="color: var(--primary);">Rol</small>
         </div>
@@ -267,47 +280,53 @@
 
     <div class="welcome-banner">
       <h1>¡Hola de nuevo!</h1>
-      <p>Bienvenido al Repositorio de Pruebas y Juegos Cognitivos.</p>
+      <p>Bienvenido al Repositorio de Pruebas y Juegos Cognitivos. Selecciona un módulo para comenzar.</p>
     </div>
 
     <div class="modules-grid">
       <div class="module-card" onclick="window.location.href='tests.html'">
-        <div class="icon-box"><i class="fas fa-clipboard-list"></i></div>
-        <h3>Tests Psicológicos</h3>
-        <p>Banco de pruebas estandarizadas y manuales de aplicación.</p>
+        <div>
+          <div class="icon-box"><i class="fas fa-clipboard-list"></i></div>
+          <h3>Tests Psicológicos</h3>
+          <p>Banco de pruebas estandarizadas y manuales de aplicación.</p>
+        </div>
         <div class="arrow-link">Acceder <i class="fas fa-arrow-right"></i></div>
       </div>
 
       <div class="module-card" onclick="window.location.href='juegos.html'">
-        <div class="icon-box"><i class="fas fa-gamepad"></i></div>
-        <h3>Juegos Cognitivos</h3>
-        <p>Actividades interactivas de estimulación y rehabilitación.</p>
+        <div>
+          <div class="icon-box"><i class="fas fa-gamepad"></i></div>
+          <h3>Juegos Cognitivos</h3>
+          <p>Plataforma interactiva para la estimulación de funciones ejecutivas, memoria y atención.</p>
+        </div>
         <div class="arrow-link">Acceder <i class="fas fa-arrow-right"></i></div>
       </div>
     </div>
   </main>
 
   <script>
-    // 1. Verificar sesión
     const token = localStorage.getItem("token");
     const nombre = localStorage.getItem("nombreUsuario");
-    const rol = localStorage.getItem("rolUsuario"); // CRUCIAL para RBAC
+    const rol = localStorage.getItem("rolUsuario");
 
     if (!token || !nombre) {
       window.location.href = "/";
     } else {
       document.getElementById("nombreUsuarioDisplay").textContent = nombre;
-      // Mostrar rol capitalizado
       const rolCapitalizado = rol.charAt(0).toUpperCase() + rol.slice(1);
       document.getElementById("rolUsuarioDisplay").textContent = rolCapitalizado;
     }
 
-    // 2. Mostrar botón de Admin si corresponde
-    if (rol === 'admin') {
-      document.getElementById('btnAdmin').style.display = 'block';
+    // --- LÓGICA DE ROLES ACTUALIZADA ---
+    if (rol && rol.toLowerCase().includes('admin')) {
+      // Mostrar ambos botones de Admin
+      const btnAdmin = document.getElementById('btnAdmin');
+      const btnRecursos = document.getElementById('btnRecursos');
+
+      if (btnAdmin) btnAdmin.style.display = 'block';
+      if (btnRecursos) btnRecursos.style.display = 'block';
     }
 
-    // 3. Cerrar Sesión
     document.getElementById("logoutBtn").addEventListener("click", () => {
       localStorage.clear();
       window.location.href = "/";

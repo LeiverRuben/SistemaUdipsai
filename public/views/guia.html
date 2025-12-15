@@ -7,13 +7,16 @@
     <title>Guía de Uso – UDIPSAI</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
+        /* ESTILOS BASE */
         :root {
             --primary: #E30613;
             --secondary: #333;
             --bg-light: #F5F5F5;
             --sidebar-bg: #FFF;
             --text-gray: #666;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
         }
 
         * {
@@ -45,6 +48,7 @@
             color: var(--primary);
             font-weight: 700;
             letter-spacing: 1px;
+            font-size: 1.8rem;
         }
 
         .sidebar ul {
@@ -90,15 +94,16 @@
             padding: 15px 40px;
             display: flex;
             align-items: center;
-            gap: 20px;
+            justify-content: space-between;
             border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            box-shadow: var(--card-shadow);
             margin-bottom: 40px;
             border-left: 5px solid var(--primary);
         }
 
         .header-logo {
             height: 50px;
+            border-radius: 6px;
         }
 
         .header-text h2 {
@@ -107,6 +112,35 @@
             margin: 0;
         }
 
+        .header-text p {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+        }
+
+        .user-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        .btn-logout {
+            background: #fff0f0;
+            color: var(--primary);
+            border: 1px solid #ffcccc;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-logout:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* ACORDEÓN */
         .guide-container {
             max-width: 800px;
             margin: 0 auto;
@@ -114,15 +148,21 @@
 
         .faq-item {
             background: white;
-            margin-bottom: 15px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+            margin-bottom: 20px;
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
             overflow: hidden;
-            border-left: 5px solid var(--primary);
+            border-left: 5px solid var(--secondary);
+            transition: 0.3s;
+        }
+
+        .faq-item:hover {
+            transform: translateX(5px);
+            border-left-color: var(--primary);
         }
 
         summary {
-            padding: 20px;
+            padding: 25px;
             cursor: pointer;
             font-weight: 600;
             color: var(--secondary);
@@ -130,6 +170,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            font-size: 1.1rem;
         }
 
         summary:hover {
@@ -151,10 +192,11 @@
         }
 
         .faq-content {
-            padding: 0 20px 20px 20px;
+            padding: 0 25px 25px 25px;
             color: var(--text-gray);
-            line-height: 1.6;
+            line-height: 1.8;
             border-top: 1px solid #f1f2f6;
+            font-size: 0.95rem;
         }
 
         .faq-content strong {
@@ -172,37 +214,63 @@
             <li><a href="juegos.html"><i class="fas fa-gamepad"></i> Juegos</a></li>
             <li id="btnAdmin" style="display: none;"><a href="admin.html"><i class="fas fa-users-cog"></i> Gestión
                     Usuarios</a></li>
+            <li id="btnRecursos" style="display: none;">
+                <a href="recursos.html"><i class="fas fa-cloud-upload-alt"></i> Subir Recursos</a>
+            </li>
             <li><a href="#" class="active"><i class="fas fa-book-reader"></i> Guía de Uso</a></li>
-            <li><a href="configuracion.html"><i class="fas fa-cog"></i> Configuración</a></li>
+            <li><a href="configuracion.html"><i class="fas fa-shield-alt"></i> Seguridad</a></li>
         </ul>
     </nav>
     <main class="main-content">
         <header>
-            <img src="/img/logo-udipsai.jpg" alt="Logo" class="header-logo">
-            <div class="header-text">
-                <h2>Centro de Ayuda</h2>
-                <p>Preguntas frecuentes y soporte técnico</p>
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <img src="/img/logo-udipsai.jpg" alt="Logo" class="header-logo">
+                <div class="header-text">
+                    <h2>Centro de Ayuda</h2>
+                    <p>Preguntas frecuentes y soporte técnico</p>
+                </div>
+            </div>
+            <div class="user-wrapper">
+                <span id="nombreUsuarioDisplay">Cargando...</span>
+                <button id="logoutBtn" class="btn-logout"><i class="fas fa-power-off"></i></button>
             </div>
         </header>
+
         <div class="guide-container">
             <details class="faq-item">
-                <summary>¿Cómo inicio una evaluación?</summary>
-                <div class="faq-content">Ve a <strong>Tests</strong> y selecciona la prueba.</div>
+                <summary>¿Cómo inicio una evaluación psicológica?</summary>
+                <div class="faq-content">Ve al apartado <strong>Tests</strong> en el menú lateral. Selecciona la prueba
+                    deseada y haz clic en el botón de acción correspondiente.</div>
             </details>
             <details class="faq-item">
                 <summary>¿Qué hago si olvido mi contraseña?</summary>
-                <div class="faq-content">Contacta al <strong>Administrador (Gabriela)</strong> para resetearla.</div>
+                <div class="faq-content">Si puedes entrar, cámbiala en <strong>Seguridad</strong>. Si estás bloqueado,
+                    contacta al <strong>Administrador (Gabriela)</strong> para que la restablezca.</div>
             </details>
             <details class="faq-item">
                 <summary>¿Problemas con los juegos?</summary>
-                <div class="faq-content">Usa el enlace "Abrir en pestaña nueva" si no cargan.</div>
+                <div class="faq-content">Si un juego no carga, usa el enlace <strong>"Abrir en pestaña nueva"</strong> o
+                    descarga la versión de escritorio.</div>
             </details>
         </div>
     </main>
     <script>
-        const token = localStorage.getItem("token"), rol = localStorage.getItem("rolUsuario");
+        const token = localStorage.getItem("token"), rol = localStorage.getItem("rolUsuario"), nombre = localStorage.getItem("nombreUsuario");
         if (!token) window.location.href = "/";
-        if (rol === 'admin') document.getElementById('btnAdmin').style.display = 'block';
+        else document.getElementById("nombreUsuarioDisplay").textContent = nombre;
+
+        if (rol && rol.toLowerCase().includes('admin')) {
+            const btnAdmin = document.getElementById('btnAdmin');
+            const btnRecursos = document.getElementById('btnRecursos');
+
+            if (btnAdmin) btnAdmin.style.display = 'block';
+            if (btnRecursos) btnRecursos.style.display = 'block';
+        }
+
+        document.getElementById("logoutBtn").addEventListener("click", () => {
+            localStorage.clear();
+            window.location.href = "/";
+        });
     </script>
 </body>
 

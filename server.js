@@ -4,58 +4,55 @@ import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
 import bcrypt from "bcryptjs";
-import os from "os"; //detectar la IP
+import os from "os";
 
 import { sequelize } from "./config/db.js";
 import { Usuario } from "./models/Usuario.js";
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import { USUARIOS_INICIALES } from "./config/usuariosIniciales.js";
+import recursoRoutes from "./routes/recursoRoutes.js"; // <--- IMPORTAR
+import { Recurso } from "./models/Recurso.js"; // <--- IMPORTAR MODELO
 
 dotenv.config();
 const app = express();
 
-// Necesario para rutas de archivos
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// ==========================================
-// 1. SEGURIDAD (Obligatorio para Juegos Web/Godot)
-// ==========================================
+// 1. SEGURIDAD
 app.use((req, res, next) => {
   res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
   res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
   next();
 });
 
-// Middlewares
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
-// Rutas API
 app.use("/api/auth", authRoutes);
 app.use("/api/usuarios", userRoutes);
+app.use("/api/recursos", recursoRoutes); // <--- NUEVA RUTA API
 
-// Ruta Raíz -> Login
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "views", "login.html"));
 });
 
 // ==========================================
-// 2. FUNCIÓN AUTO-SEMILLA (Crea usuarios al inicio)
+// 2. FUNCIÓN AUTO-SEMILLA (SOLO CREA, NO SOBREESCRIBE)
 // ==========================================
 const inicializarSistema = async () => {
-  console.log("⚙️  Verificando integridad del sistema...");
+  console.log("⚙️  Verificando usuarios iniciales...");
 
   try {
-    let cambios = 0;
+    let creados = 0;
     for (const u of USUARIOS_INICIALES) {
       // Buscamos si el usuario ya existe por cédula
       const usuarioExistente = await Usuario.findOne({ where: { cedula: u.cedula } });
 
+      // SI NO EXISTE -> LO CREAMOS
       if (!usuarioExistente) {
-        // Si no existe, lo creamos
         const hash = await bcrypt.hash(u.cedula, 10);
         await Usuario.create({
           ...u,
@@ -63,23 +60,18 @@ const inicializarSistema = async () => {
           debe_cambiar_pass: true
         });
         console.log(`[NUEVO] Usuario creado: ${u.nombre}`);
-        cambios++;
-      } else {
-        // Si existe, verificamos si el rol es correcto (Auto-corrección)
-        if (usuarioExistente.rol !== u.rol) {
-          usuarioExistente.rol = u.rol;
-          await usuarioExistente.save();
-          console.log(`[CORREGIDO] Rol actualizado para: ${u.nombre}`);
-          cambios++;
-        }
+        creados++;
       }
+
+      // ELIMINAMOS LA PARTE "ELSE" QUE SOBREESCRIBÍA TUS CAMBIOS
+      // Ahora, si el usuario existe, el sistema lo deja tranquilo tal como tú lo editaste.
     }
 
-    if (cambios === 0) console.log("✅ Sistema al día. No se requirieron cambios.");
-    else console.log(`✨ Se aplicaron ${cambios} actualizaciones automáticas.`);
+    if (creados === 0) console.log("✅ Base de datos lista. No hay usuarios nuevos por agregar.");
+    else console.log(`✨ Se crearon ${creados} usuarios nuevos.`);
 
   } catch (error) {
-    console.error("❌ Error crítico en inicialización:", error);
+    console.error("❌ Error en inicialización:", error);
   }
 };
 
@@ -89,28 +81,22 @@ const inicializarSistema = async () => {
 sequelize.sync({ alter: true }).then(async () => {
   console.log("✅ Base de datos conectada");
 
-  // Ejecutamos la carga automática de datos
   await inicializarSistema();
 
-  // Escuchamos en 0.0.0.0 para permitir conexiones externas
   app.listen(3000, '0.0.0.0', () => {
     console.log("\n🚀 SERVIDOR CORRIENDO EXITOSAMENTE");
     console.log("---------------------------------------");
     console.log("💻 Local:   http://localhost:3000");
 
-    // Truco para mostrar tu IP de red automáticamente
     const networks = os.networkInterfaces();
     for (const name of Object.keys(networks)) {
       for (const net of networks[name]) {
         if (net.family === 'IPv4' && !net.internal) {
-
-          // FILTRO INTELIGENTE:
-          // Si empieza con 192.168.56, suele ser VirtualBox (lo marcamos diferente)
+          // Filtro visual para identificar la red real
           if (net.address.startsWith("192.168.56")) {
-            console.log(`🔌 Virtual: http://${net.address}:3000 (Solo para VMs)`);
+            // Ignoramos redes virtuales en el log para no confundir
           } else {
-            // Esta es la buena para compartir
-            console.log(`🌐 Red WiFi: http://${net.address}:3000  <-- ¡Esta es para compartir!`);
+            console.log(`🌐 Red:     http://${net.address}:3000`);
           }
         }
       }

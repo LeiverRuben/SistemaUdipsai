@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
+        /* ESTILOS IGUALES AL ANTERIOR, SOLO CAMBIO MENU */
         :root {
             --primary: #E30613;
             --secondary: #333;
@@ -30,7 +31,6 @@
             min-height: 100vh;
         }
 
-        /* SIDEBAR */
         .sidebar {
             width: 260px;
             background: var(--sidebar-bg);
@@ -82,14 +82,13 @@
             font-size: 1.2rem;
         }
 
-        /* MAIN */
         .main-content {
             margin-left: 260px;
             width: calc(100% - 260px);
             padding: 40px;
         }
 
-        /* HEADER */
+        /* ... resto de estilos de tabla, botones, etc ... */
         header {
             background: white;
             padding: 15px 40px;
@@ -131,12 +130,34 @@
             transition: 0.3s;
         }
 
-        .btn-new:hover {
-            background: #b0050f;
-            transform: translateY(-2px);
+        .btn-roles {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
         }
 
-        /* TABLA */
+        .btn-info {
+            background: #17a2b8;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
+        }
+
         .table-container {
             background: white;
             border-radius: 15px;
@@ -184,24 +205,8 @@
             font-size: 0.8rem;
             font-weight: 600;
             text-transform: capitalize;
+            display: inline-block;
         }
-
-        .badge-admin {
-            background: #333;
-            color: #fff;
-        }
-
-        .badge-psico {
-            background: #e0e0e0;
-            color: #333;
-        }
-
-        .badge-otro {
-            background: #e3f2fd;
-            color: #006064;
-        }
-
-        /* Color para roles nuevos */
 
         .btn-icon {
             background: #fff;
@@ -234,6 +239,41 @@
             width: 80% !important;
             margin: 10px auto !important;
         }
+
+        .role-list {
+            text-align: left;
+            margin-top: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .role-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .role-actions i {
+            cursor: pointer;
+            margin-left: 10px;
+            color: #666;
+            transition: 0.3s;
+        }
+
+        .role-actions i:hover {
+            color: var(--primary);
+        }
+
+        .role-actions i.delete:hover {
+            color: #d33;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
     </style>
 </head>
 
@@ -245,8 +285,11 @@
             <li><a href="tests.html"><i class="fas fa-clipboard-check"></i> Tests</a></li>
             <li><a href="juegos.html"><i class="fas fa-gamepad"></i> Juegos</a></li>
             <li><a href="#" class="active"><i class="fas fa-users-cog"></i> Gestión Usuarios</a></li>
+            <li id="btnRecursos" style="display: none;">
+                <a href="recursos.html"><i class="fas fa-cloud-upload-alt"></i> Subir Recursos</a>
+            </li>
             <li><a href="guia.html"><i class="fas fa-book-reader"></i> Guía de Uso</a></li>
-            <li><a href="configuracion.html"><i class="fas fa-cog"></i> Configuración</a></li>
+            <li><a href="configuracion.html"><i class="fas fa-shield-alt"></i> Seguridad</a></li>
         </ul>
     </nav>
     <main class="main-content">
@@ -258,7 +301,11 @@
                     <p>Control de accesos y seguridad</p>
                 </div>
             </div>
-            <button class="btn-new" onclick="crearUsuario()"><i class="fas fa-user-plus"></i> Nuevo Usuario</button>
+            <div class="header-actions">
+                <button class="btn-info" onclick="verInfoRoles()"><i class="fas fa-info-circle"></i> Info</button>
+                <button class="btn-roles" onclick="abrirGestorRoles()"><i class="fas fa-tags"></i> Roles</button>
+                <button class="btn-new" onclick="crearUsuario()"><i class="fas fa-user-plus"></i> Nuevo</button>
+            </div>
         </header>
         <div class="table-container">
             <table>
@@ -281,9 +328,30 @@
     <script>
         const token = localStorage.getItem("token"), rol = localStorage.getItem("rolUsuario");
         if (!token) window.location.href = "/";
-        if (rol !== 'admin') window.location.href = "dashboard.html";
+        if (!rol || !rol.toLowerCase().includes('admin')) window.location.href = "dashboard.html";
+
+        if (rol && rol.toLowerCase().includes('admin')) {
+            const btnAdmin = document.getElementById('btnAdmin');
+            const btnRecursos = document.getElementById('btnRecursos');
+
+            if (btnAdmin) btnAdmin.style.display = 'block';
+            if (btnRecursos) btnRecursos.style.display = 'block';
+        }
 
         document.addEventListener('DOMContentLoaded', cargarUsuarios);
+
+        function getColorHash(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
+            const h = Math.abs(hash) % 360;
+            return `hsl(${h}, 70%, 90%)`;
+        }
+        function getDarkColorHash(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
+            const h = Math.abs(hash) % 360;
+            return `hsl(${h}, 70%, 25%)`;
+        }
 
         async function cargarUsuarios() {
             try {
@@ -292,14 +360,20 @@
                 const tbody = document.getElementById('tablaUsuarios');
                 tbody.innerHTML = '';
                 users.forEach(u => {
-                    const badgeClass = (u.rol === 'admin') ? 'badge-admin' : (u.rol === 'psicologo' ? 'badge-psico' : 'badge-otro');
-                    // Capitalizar primera letra
+                    let rolStyle = '';
+                    const r = u.rol.toLowerCase();
+                    if (r.includes('admin')) {
+                        rolStyle = 'background-color: #333; color: #fff; border: 1px solid #333;';
+                    } else {
+                        const bg = getColorHash(r);
+                        const text = getDarkColorHash(r);
+                        rolStyle = `background-color: ${bg}; color: ${text}; border: 1px solid ${bg};`;
+                    }
                     const rolText = u.rol.charAt(0).toUpperCase() + u.rol.slice(1);
-
                     tbody.innerHTML += `<tr>
                         <td><strong>${u.nombre}</strong></td>
                         <td>${u.cedula}</td>
-                        <td><span class="badge ${badgeClass}">${rolText}</span></td>
+                        <td><span class="badge" style="${rolStyle}">${rolText}</span></td>
                         <td>
                             <button class="btn-icon" onclick="editar(${u.id}, '${u.nombre}', '${u.rol}')" title="Editar"><i class="fas fa-edit"></i></button>
                             <button class="btn-icon" onclick="resetear(${u.id}, '${u.nombre}')" title="Resetear Clave"><i class="fas fa-key"></i></button>
@@ -310,119 +384,116 @@
             } catch (e) { console.error(e); }
         }
 
-        // --- OBTENER ROLES PARA EL SELECT ---
-        async function getRolesOptions(rolSeleccionado = '') {
+        function verInfoRoles() {
+            Swal.fire({
+                title: 'Niveles de Acceso',
+                html: `<div style="text-align: left; font-size: 0.9rem;"><p><strong>⚫ Administrativos:</strong> Acceso total.</p><p><strong>🟢 Otros Roles:</strong> Acceso operativo.</p></div>`,
+                icon: 'info', confirmButtonColor: '#E30613'
+            });
+        }
+
+        async function abrirGestorRoles() {
+            const res = await fetch('/api/usuarios/roles/lista');
+            let roles = await res.json();
+            roles = roles.filter(r => r);
+            let rolesHTML = '<div class="role-list">';
+            roles.forEach(r => {
+                rolesHTML += `<div class="role-item"><span>${r.charAt(0).toUpperCase() + r.slice(1)}</span> <div class="role-actions"><i class="fas fa-edit" onclick="renombrarRol('${r}')"></i><i class="fas fa-trash-alt delete" onclick="eliminarRol('${r}')"></i></div></div>`;
+            });
+            rolesHTML += '</div>';
+            Swal.fire({ title: 'Gestión de Roles', html: rolesHTML, showConfirmButton: false, showCloseButton: true });
+        }
+
+        async function renombrarRol(rolViejo) {
+            const { value: rolNuevo } = await Swal.fire({ title: `Renombrar '${rolViejo}'`, input: 'text', inputValue: rolViejo, showCancelButton: true, confirmButtonColor: '#E30613' });
+            if (rolNuevo && rolNuevo !== rolViejo) await ejecutarMigracion(rolViejo, rolNuevo);
+        }
+
+        async function eliminarRol(rolAEliminar) {
+            const res = await fetch('/api/usuarios/roles/lista');
+            let roles = await res.json();
+            roles = roles.filter(r => r !== rolAEliminar);
+            if (roles.length === 0) roles.push('psicologo');
+            const options = roles.reduce((acc, curr) => ({ ...acc, [curr]: curr.charAt(0).toUpperCase() + curr.slice(1) }), {});
+            const { value: rolDestino } = await Swal.fire({ title: `Eliminar '${rolAEliminar}'`, text: 'Mover usuarios a:', input: 'select', inputOptions: options, showCancelButton: true, confirmButtonColor: '#d33' });
+            if (rolDestino) await ejecutarMigracion(rolAEliminar, rolDestino);
+        }
+
+        async function ejecutarMigracion(v, n) {
+            try {
+                const res = await fetch('/api/usuarios/roles/migrar', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ rolViejo: v, rolNuevo: n.toLowerCase().trim() }) });
+                const data = await res.json();
+                if (res.ok) { Swal.fire({ icon: 'success', title: 'Éxito', text: data.mensaje, confirmButtonColor: '#E30613' }); cargarUsuarios(); }
+                else Swal.fire({ icon: 'error', title: 'Error', text: data.error, confirmButtonColor: '#E30613' });
+            } catch (e) { Swal.fire({ icon: 'error', title: 'Error', text: 'Fallo de conexión', confirmButtonColor: '#E30613' }); }
+        }
+
+        async function getRolesOptions(rolActual = '') {
             try {
                 const res = await fetch('/api/usuarios/roles/lista');
                 const roles = await res.json();
                 if (!roles.includes('admin')) roles.push('admin');
                 if (!roles.includes('psicologo')) roles.push('psicologo');
-
-                // Ordenar y quitar duplicados
+                if (rolActual && !roles.includes(rolActual)) roles.push(rolActual);
                 const uniqueRoles = [...new Set(roles)].sort();
-
                 let html = '';
                 uniqueRoles.forEach(r => {
-                    const selected = r === rolSeleccionado ? 'selected' : '';
-                    // Capitalizar para que se vea bonito en la lista
-                    const label = r.charAt(0).toUpperCase() + r.slice(1);
-                    html += `<option value="${r}" ${selected}>${label}</option>`;
+                    const selected = r.toLowerCase() === rolActual.toLowerCase() ? 'selected' : '';
+                    html += `<option value="${r}" ${selected}>${r.charAt(0).toUpperCase() + r.slice(1)}</option>`;
                 });
-                // Opción especial para crear nuevo
-                html += `<option value="__NUEVO__">➕ Crear Nuevo Rol...</option>`;
+                html += `<option value="__NUEVO__" style="font-weight:bold; color:#E30613;">➕ Agregar Nuevo Rol...</option>`;
                 return html;
-            } catch (e) {
-                return `<option value="psicologo">Psicólogo</option><option value="admin">Admin</option><option value="__NUEVO__">➕ Crear Nuevo Rol...</option>`;
-            }
+            } catch (e) { return `<option value="psicologo">Psicólogo</option><option value="admin">Admin</option>`; }
         }
 
-        // --- CREAR / EDITAR (Lógica Unificada) ---
-        async function abrirModalUsuario(id = null, nombre = '', rolActual = '') {
-            const isEdit = id !== null;
-            const title = isEdit ? 'Editar Usuario' : 'Nuevo Usuario';
-            const confirmText = isEdit ? 'Guardar Cambios' : 'Crear Usuario';
+        window.toggleInputRol = function (select) {
+            const input = document.getElementById('swal-rol-nuevo');
+            input.style.display = select.value === '__NUEVO__' ? 'block' : 'none';
+        };
 
-            const rolesOptions = await getRolesOptions(rolActual || 'psicologo');
-
-            const { value: formValues } = await Swal.fire({
-                title: title,
-                html:
-                    `<input id="swal-nombre" class="swal2-input" placeholder="Nombre Completo" value="${nombre}">` +
-                    (isEdit ? '' : `<input id="swal-cedula" class="swal2-input" placeholder="Cédula">`) +
-                    `<select id="swal-rol" class="swal2-select" onchange="checkNuevoRol(this)">${rolesOptions}</select>` +
-                    `<input id="swal-rol-nuevo" class="swal2-input" placeholder="Escribe el nuevo rol" style="display:none;">`,
-                focusConfirm: false,
-                showCancelButton: true,
-                confirmButtonText: confirmText,
-                confirmButtonColor: '#E30613',
-                preConfirm: () => {
-                    const rolSelect = document.getElementById('swal-rol').value;
-                    const rolNuevo = document.getElementById('swal-rol-nuevo').value;
-
-                    return {
-                        nombre: document.getElementById('swal-nombre').value,
-                        cedula: isEdit ? null : document.getElementById('swal-cedula').value,
-                        // Si eligió "Nuevo", usamos el input de texto, si no, el del select
-                        rol: rolSelect === '__NUEVO__' ? rolNuevo.toLowerCase() : rolSelect
-                    }
-                }
-            });
-
-            if (formValues) {
-                // Validaciones
-                if (!formValues.nombre || (!isEdit && !formValues.cedula) || !formValues.rol) {
-                    return Swal.fire('Error', 'Completa todos los campos', 'error');
-                }
-
-                try {
-                    const url = isEdit ? `/api/usuarios/${id}` : '/api/usuarios';
-                    const method = isEdit ? 'PUT' : 'POST';
-
-                    const res = await fetch(url, {
-                        method: method,
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(formValues)
-                    });
-                    const data = await res.json();
-
-                    if (res.ok) {
-                        Swal.fire(isEdit ? 'Actualizado' : 'Creado', data.mensaje || 'Operación exitosa', 'success');
-                        cargarUsuarios();
-                    } else {
-                        Swal.fire('Error', data.error, 'error');
-                    }
-                } catch (e) { Swal.fire('Error', 'Fallo de conexión', 'error'); }
-            }
-        }
-
-        // --- HELPERS PARA EL MODAL ---
-        // Esta función se llama cuando cambias el select. Si eliges "Nuevo", muestra el input.
-        window.checkNuevoRol = function (select) {
-            const inputNuevo = document.getElementById('swal-rol-nuevo');
-            if (select.value === '__NUEVO__') {
-                inputNuevo.style.display = 'block';
-                inputNuevo.focus();
-            } else {
-                inputNuevo.style.display = 'none';
-                inputNuevo.value = '';
+        window.autodetectarGenero = function (nombre) {
+            const val = nombre.trim(), rol = document.getElementById('swal-rol');
+            if (!val) return;
+            const last = val.split(" ")[0].toLowerCase().slice(-1);
+            const current = rol.value.toLowerCase();
+            if (last === 'a') {
+                if (current.includes('psicolog')) rol.value = 'Psicóloga';
+                else if (current.includes('admin')) rol.value = 'Administradora';
             }
         };
 
-        // Wrappers para llamar desde los botones HTML
+        async function abrirModalUsuario(id = null, nombre = '', rolActual = '') {
+            const isEdit = id !== null;
+            const rolesOptions = await getRolesOptions(rolActual || 'Psicólogo');
+            const { value: formValues } = await Swal.fire({
+                title: isEdit ? 'Editar Usuario' : 'Nuevo Usuario',
+                html: `<input id="swal-nombre" class="swal2-input" placeholder="Nombre" value="${nombre}" oninput="autodetectarGenero(this.value)">` +
+                    (isEdit ? '' : `<input id="swal-cedula" class="swal2-input" placeholder="Cédula">`) +
+                    `<select id="swal-rol" class="swal2-select" onchange="toggleInputRol(this)">${rolesOptions}</select>` +
+                    `<input id="swal-rol-nuevo" class="swal2-input" placeholder="Nuevo Rol" style="display:none;">`,
+                focusConfirm: false, showCancelButton: true, confirmButtonText: 'Guardar', confirmButtonColor: '#E30613', cancelButtonColor: '#333',
+                preConfirm: () => {
+                    const rs = document.getElementById('swal-rol').value, rn = document.getElementById('swal-rol-nuevo').value;
+                    const rf = (rs === '__NUEVO__') ? rn.trim() : rs;
+                    if (rs === '__NUEVO__' && !rn) { Swal.showValidationMessage('Escribe el rol'); return false; }
+                    return { nombre: document.getElementById('swal-nombre').value, cedula: isEdit ? null : document.getElementById('swal-cedula').value, rol: rf }
+                }
+            });
+            if (formValues) {
+                const url = isEdit ? `/api/usuarios/${id}` : '/api/usuarios';
+                const method = isEdit ? 'PUT' : 'POST';
+                try {
+                    const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(formValues) });
+                    const data = await res.json();
+                    if (res.ok) { Swal.fire({ icon: 'success', title: 'Éxito', text: data.mensaje, confirmButtonColor: '#E30613' }); cargarUsuarios(); }
+                    else Swal.fire({ icon: 'error', title: 'Error', text: data.error, confirmButtonColor: '#E30613' });
+                } catch (e) { Swal.fire({ icon: 'error', title: 'Error', text: 'Conexión fallida', confirmButtonColor: '#E30613' }); }
+            }
+        }
         function crearUsuario() { abrirModalUsuario(); }
-        function editar(id, nombre, rol) { abrirModalUsuario(id, nombre, rol); }
-
-        function resetear(id, nombre) {
-            Swal.fire({ title: '¿Resetear contraseña?', text: `Volverá a ser la cédula de ${nombre}`, icon: 'warning', showCancelButton: true, confirmButtonColor: '#E30613', confirmButtonText: 'Sí' }).then(async r => {
-                if (r.isConfirmed) { await fetch(`/api/usuarios/${id}/reset`, { method: 'PUT' }); Swal.fire('Listo', 'Contraseña restablecida', 'success'); }
-            });
-        }
-
-        function eliminar(id, nombre) {
-            Swal.fire({ title: '¿Eliminar usuario?', icon: 'error', showCancelButton: true, confirmButtonColor: '#E30613', confirmButtonText: 'Eliminar' }).then(async r => {
-                if (r.isConfirmed) { const res = await fetch(`/api/usuarios/${id}`, { method: 'DELETE' }); if (res.ok) { Swal.fire('Eliminado', '', 'success'); cargarUsuarios(); } }
-            });
-        }
+        function editar(id, n, r) { abrirModalUsuario(id, n, r); }
+        function resetear(id, nombre) { Swal.fire({ title: '¿Resetear contraseña?', text: `Será su cédula`, icon: 'warning', showCancelButton: true, confirmButtonColor: '#E30613', confirmButtonText: 'Sí' }).then(async r => { if (r.isConfirmed) { await fetch(`/api/usuarios/${id}/reset`, { method: 'PUT' }); Swal.fire({ icon: 'success', title: 'Listo', confirmButtonColor: '#E30613' }); } }); }
+        function eliminar(id, nombre) { Swal.fire({ title: '¿Eliminar?', icon: 'error', showCancelButton: true, confirmButtonColor: '#d33', confirmButtonText: 'Eliminar' }).then(async r => { if (r.isConfirmed) { const res = await fetch(`/api/usuarios/${id}`, { method: 'DELETE' }); if (res.ok) { Swal.fire({ icon: 'success', title: 'Eliminado', confirmButtonColor: '#E30613' }); cargarUsuarios(); } } }); }
     </script>
 </body>
 
