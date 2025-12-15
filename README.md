@@ -1,76 +1,112 @@
-# Sistema de Gestión Clínica y Estimulación Cognitiva UDIPSAI
+# 📘 Sistema de Gestión Clínica y Estimulación Cognitiva - UDIPSAI
 
-Este proyecto es una plataforma web desarrollada para la **Unidad de Diagnóstico Investigación Psicopedagógica con Apoyo a la Inclusión (UDIPSAI)** de la Universidad Católica de Cuenca. Su objetivo es gestionar usuarios, administrar tests psicológicos y ofrecer herramientas de estimulación cognitiva a través de juegos interactivos.
+Plataforma integral desarrollada para la **Unidad de Diagnóstico e Investigación Psicopedagógica con Apoyo a la Inclusión (UDIPSAI)**. Este sistema gestiona usuarios, administra baterías de tests psicológicos y provee herramientas de estimulación cognitiva mediante juegos interactivos, asegurando un entorno seguro y profesional.
 
-## 🚀 Características Principales
+---
 
-### 1. Módulo de Autenticación y Login
-- **Acceso seguro**: Login mediante cédula y contraseña.
-- **Personalización**:
-  - Imagen de portada personalizada (`portada-login.png`) con diseño corporativo "contain" para evitar distorsiones.
-  - Títulos y descripciones actualizados según requerimientos institucionales:
-    - *Título*: "Unidad de diagnostico investigación psicopedagogica con apoyo a la inclusión".
-    - *Subtítulo*: "Inventario de test y juegos udipsai".
+## 🚀 Características Principales y Funcionalidades Implementadas
 
-### 2. Dashboard Principal
-- Panel de control intuitivo con acceso rápido a las diferentes secciones del sistema.
-- Menú lateral de navegación persistente.
+El sistema ha sido construido modularmente para facilitar su mantenimiento y escalabilidad. A continuación, se detallan las funcionalidades clave y las decisiones técnicas tomadas ("Los Pasos Realizados"):
 
-### 3. Módulo de Juegos (Estimulación Cognitiva)
-Este módulo ha sido optimizado para garantizar la compatibilidad y experiencia de usuario:
-- **Juegos Incluidos**:
-  - **Estimulación**: Actividades generales de estimulación.
-  - **Palabras**: Juego específico de vocabulario y lenguaje.
-- **Modo Pantalla Externa (Launcher)**:
-  - Debido a restricciones de seguridad modernas (políticas de *iframes* y cabeceras de seguridad en Vercel), los juegos se ejecutan en una ventana independiente segura.
-  - Al seleccionar un juego, el sistema presenta una tarjeta de "Modo Pantalla Externa".
-  - El botón "Iniciar Juego" redirige dinámicamente a la URL correcta del juego seleccionado:
-    - *Estimulación*: `https://proyecto-vinculacion.vercel.app/`
-    - *Palabras*: `https://sistemajuegodepalabras.vercel.app/`
-- **Descargas**: Opción para descargar versiones de escritorio de las actividades.
-- **Pantalla Completa**: Funcionalidad para maximizar el área de trabajo.
+### 1. 🔐 Módulo de Autenticación y Seguridad (Auth)
+- **Login Seguro**: Implementación de autenticación mediante **JWT (JSON Web Tokens)**.
+- **Hashing de Contraseñas**: Uso de `bcryptjs` para encriptar las contraseñas en la base de datos, garantizando que ninguna contraseña se almacene en texto plano.
+- **Políticas de Seguridad Web**: Se implementaron cabeceras HTTP estrictas (`Cross-Origin-Opener-Policy` y `Cross-Origin-Embedder-Policy`) en `server.js` para mitigar vulnerabilidades y permitir el uso seguro de recursos compartidos.
 
-### 4. Gestión de Tests
-- Interfaz para la visualización y administración de tests psicopedagógicos.
+### 2. 🎮 Módulo de Juegos y Estimulación Cognitiva
+Debido a las modernas restricciones de seguridad de los navegadores (políticas de *Same-Origin*), se implementó una solución robusta para la integración de juegos externos:
+- **Launcher de Pantalla Externa**: Los juegos "Estimulación" y "Palabras" se ejecutan en ventanas independientes seguras, evitando errores de "conexión rechazada" (refused to connect).
+- **Control de Navegación**: El sistema gestiona las URL dinámicas para redirigir al usuario al entorno de juego correcto alojado en Vercel.
 
-### 5. Administración de Usuarios
-- (Solo Admin) Panel para gestionar el acceso de terapeutas y pacientes.
-- Funciones de cambio de contraseña y configuración.
+### 3. 👥 Gestión de Usuarios y Roles
+- **Roles Diferenciados**:
+  - **Admin**: Acceso total, incluyendo "Gestión Usuarios" y "Subir Recursos".
+  - **Usuario/Terapeuta**: Acceso restringido a las herramientas clínicas y tests.
+- **Seeders Automáticos (Semillas)**: El sistema incluye un script de inicialización (`config/usuariosIniciales.js`) que verifica y crea usuarios base automáticamente al arrancar el servidor si no existen, facilitando el despliegue inicial.
 
-## 🛠️ Tecnologías Utilizadas
+### 4. 📂 Gestión de Recursos Clínicos
+- **Subida de Archivos**: Uso de `multer` para permitir a los administradores subir documentos y recursos PDF.
+- **Repositorio Digital**: Interfaz dedicada para visualizar y descargar guías y manuales.
 
-- **Frontend**: HTML5, CSS3 (Diseño responsivo), JavaScript (Vanilla).
-- **Backend**: Node.js, Express.
-- **Base de Datos**: (Especificar si usa MongoDB/MySQL - basado en la estructura parece usar controladores).
-- **Seguridad**: Autenticación basada en Tokens (JWT).
+### 5. 💻 Interfaz de Usuario (Frontend)
+- **Diseño Responsivo**: HTML5 y CSS3 puro con diseño adaptable.
+- **Identidad Corporativa**: Personalización completa del login y dashboard con los colores y logos oficiales de la UDIPSAI.
 
-## 📋 Instalación y Uso
+---
 
-1. **Clonar el repositorio**:
-   ```bash
-   git clone https://github.com/LeiverRuben/SistemaUdipsai.git
-   ```
+## 🛠️ Arquitectura del Proyecto
 
-2. **Instalar dependencias**:
-   ```bash
-   cd SistemaUdipsai
-   npm install
-   ```
+El proyecto sigue una arquitectura **MVC (Modelo-Vista-Controlador)** adaptada a Node.js:
 
-3. **Configuración**:
-   - Asegúrese de tener las variables de entorno configuradas (crear archivo `.env` si es necesario con las credenciales de BD y claves secretas).
+| Directorio | Descripción |
+| :--- | :--- |
+| **`config/`** | Configuraciones globales. Contiene `db.js` (conexión BD) y usuarios iniciales. |
+| **`controllers/`** | Lógica de negocio. `userController.js`, `recursoController.js`, etc. Aquí reside la inteligencia del sistema. |
+| **`models/`** | Definición de esquemas de base de datos usando **Sequelize** (ORM). |
+| **`routes/`** | Definición de endpoints API (`/api/auth`, `/api/usuarios`, etc.). |
+| **`middleware/`** | Funciones intermedias para validación de tokens y seguridad. |
+| **`public/`** | Archivos estáticos del Frontend (HTML, CSS, JS del cliente, imágenes). |
+| **`server.js`** | Punto de entrada. Configura Express, CORS, headers de seguridad y arranca la BD. |
 
-4. **Ejecutar el servidor**:
-   ```bash
-   npm start
-   # O para desarrollo
-   npm run dev
-   ```
+---
 
-5. **Acceder**:
-   - Abra su navegador en `http://localhost:3000` (o el puerto configurado).
+## 📦 Dependencias y Tecnología
 
-## 📄 Notas de la Última Actualización
+El núcleo del sistema se basa en las siguientes librerías clave (ver `package.json`):
 
-- **Corrección de Visualización de Juegos**: Se solucionó el error "refused to connect" en el juego de "Palabras" implementando el modo de lanzamiento externo. Esto asegura que los juegos funcionen correctamente independientemente de las restricciones de *Cross-Origin* del navegador.
-- **Actualización de Identidad Visual**: Se renovó la pantalla de login con los textos oficiales de la unidad y la nueva imagen corporativa.
+- **Backend**:
+  - `express`: Framework servidor web.
+  - `sequelize` & `mysql2`: ORM para gestión de base de datos SQL.
+  - `jsonwebtoken`: Manejo de sesiones sin estado.
+  - `bcryptjs`: Seguridad y criptografía.
+  - `multer`: Manejo de subida de archivos (multipart/form-data).
+  - `cors` & `dotenv`: Configuración de entorno y acceso cruzado.
+- **Desarrollo**:
+  - `nodemon`: Reinicio automático del servidor durante el desarrollo.
+
+---
+
+## ⚙️ Instalación y Configuración
+
+### Prerrequisitos
+- **Node.js** (v18 o superior recomendado)
+- **Base de Datos MySQL** (Local o Remota)
+
+### Paso 1: Clonar e Instalar
+```bash
+git clone https://github.com/LeiverRuben/SistemaUdipsai.git
+cd SistemaUdipsai
+npm install
+```
+
+### Paso 2: Configuración de Base de Datos
+El archivo de conexión se encuentra en `config/db.js`.
+> ⚠️ **Nota Importante**: Actualmente las credenciales pueden estar definidas directamente en el código. Se recomienda crear un archivo `.env` en la raíz con las siguientes variables para mayor seguridad:
+
+```env
+DB_NAME=sistema_udipsai
+DB_USER=root
+DB_PASS=TU_CONTRASEÑA
+DB_HOST=localhost
+JWT_SECRET=tu_secreto_super_seguro
+```
+
+### Paso 3: Ejecución
+Para desarrollo (con recarga automática):
+```bash
+npm run dev
+```
+
+Para producción:
+```bash
+npm start
+```
+El servidor iniciará por defecto en `http://localhost:3000`.
+
+---
+
+## 📝 Notas para el Encargado de Documentación
+
+1. **Variables de Entorno**: Verificar si el servidor de despliegue requiere configurar el puerto (`PORT`) en el archivo `.env`.
+2. **Carpetas de Carga**: Asegurarse de que la carpeta `public/uploads` (u otras rutas definidas en `multer`) tenga permisos de escritura en el servidor de producción.
+3. **Persistencia**: Si se usa Docker o un servicio en la nube, asegurar que la base de datos tenga un volumen persistente.
