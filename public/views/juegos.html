@@ -95,7 +95,15 @@
             height: 100vh;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
+
+        header,
+        .games-control-bar {
+            flex-shrink: 0;
+        }
+
+        /* No se encogen */
 
         header {
             background: white;
@@ -185,6 +193,7 @@
             box-shadow: 0 5px 15px rgba(51, 51, 51, 0.2);
         }
 
+        /* AREA VISUALIZACIÓN */
         .display-area {
             flex-grow: 1;
             width: 100%;
@@ -192,9 +201,10 @@
             background: #eef2f5;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
 
-        /* VISTA TARJETA DE LANZAMIENTO (LAUNCHER) */
+        /* VISTA LAUNCHER (Unificada) */
         .launcher-card {
             display: flex;
             flex-direction: column;
@@ -246,25 +256,53 @@
             transform: translateY(-3px);
         }
 
-        /* VISTA DESCARGAS */
+        /* VISTA DESCARGAS (Con Scroll corregido) */
         .downloads-wrapper {
             display: none;
             padding: 40px;
             flex-grow: 1;
             overflow-y: auto;
-            justify-content: center;
+            /* Scroll habilitado aquí */
+            height: 100%;
         }
 
+        .downloads-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* TARJETA UNIFICADA */
         .download-card {
             background: white;
-            padding: 40px;
+            padding: 30px;
             border-radius: 15px;
             text-align: center;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            border-bottom: 5px solid var(--primary-color);
-            max-width: 450px;
-            width: 100%;
-            height: fit-content;
+            border-bottom: 5px solid var(--secondary-color);
+            height: 100%;
+            min-height: 350px;
+            /* Altura Fija */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .download-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
         }
 
         .download-icon {
@@ -273,21 +311,64 @@
             margin-bottom: 20px;
         }
 
+        .download-card h3 {
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .download-card p {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+            line-height: 1.6;
+        }
+
         .download-link-btn {
-            display: inline-block;
+            display: block;
+            width: 100%;
             background: var(--primary-color);
             color: white;
-            padding: 12px 30px;
+            padding: 12px 0;
             border-radius: 8px;
             font-weight: 600;
             transition: 0.3s;
-            margin-top: 10px;
             text-decoration: none;
         }
 
         .download-link-btn:hover {
             background: var(--accent-color);
             box-shadow: 0 5px 15px rgba(227, 6, 19, 0.3);
+        }
+
+        .section-title {
+            color: var(--secondary-color);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            border-left: 5px solid var(--primary-color);
+            padding-left: 15px;
+            width: 100%;
+        }
+
+        .divider {
+            border: 0;
+            height: 1px;
+            background: #ddd;
+            margin: 40px 0;
+            width: 100%;
+        }
+
+        .new-badge {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -300,10 +381,12 @@
             <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
             <li><a href="tests.html"><i class="fas fa-clipboard-check"></i> Tests</a></li>
             <li><a href="#" class="active"><i class="fas fa-gamepad"></i> Juegos</a></li>
+
             <li id="btnAdmin" style="display: none;"><a href="admin.html"><i class="fas fa-users-cog"></i> Gestión
                     Usuarios</a></li>
             <li id="btnRecursos" style="display: none;"><a href="recursos.html"><i class="fas fa-cloud-upload-alt"></i>
                     Subir Recursos</a></li>
+
             <li><a href="guia.html"><i class="fas fa-book-reader"></i> Guía de Uso</a></li>
             <li><a href="configuracion.html"><i class="fas fa-shield-alt"></i> Seguridad</a></li>
         </ul>
@@ -342,11 +425,9 @@
 
             <div id="launcherView" class="launcher-card">
                 <div class="game-icon-large" id="gameIcon"><i class="fas fa-puzzle-piece"></i></div>
-
                 <h2 id="gameTitle" style="color: var(--primary-color); margin-bottom: 10px;">Estimulación Cognitiva</h2>
                 <p id="gameDesc" style="color: var(--text-gray); max-width: 500px;">Juego interactivo diseñado para
                     fortalecer la memoria y la atención.</p>
-
                 <a id="launchLink" href="#" target="_blank" class="launch-btn">
                     <i class="fas fa-play"></i> Iniciar Juego
                 </a>
@@ -354,16 +435,27 @@
             </div>
 
             <div id="downloadView" class="downloads-wrapper">
-                <div class="downloads-grid" style="display: flex; justify-content: center; width: 100%;">
+
+                <h2 class="section-title">Juegos Oficiales</h2>
+                <div class="downloads-grid">
                     <div class="download-card">
-                        <div class="download-icon"><i class="fas fa-desktop"></i></div>
-                        <h3 style="color: var(--text-dark); margin-bottom: 10px;">Entrenamiento Cognitivo</h3>
-                        <p style="color: var(--text-gray);">Versión de escritorio para jugar sin conexión a internet.
-                        </p>
+                        <div class="card-content">
+                            <div class="download-icon"><i class="fas fa-desktop"></i></div>
+                            <h3>Entrenamiento Cognitivo</h3>
+                            <p>Versión de escritorio para jugar sin conexión a internet.</p>
+                        </div>
                         <a href="/descargas/JuegoEscritorio.zip" class="download-link-btn" download><i
                                 class="fas fa-download"></i> Descargar .ZIP</a>
                     </div>
                 </div>
+
+                <div id="dynamicGamesSection" style="display: none;">
+                    <hr class="divider">
+                    <h2 class="section-title">Juegos Adicionales</h2>
+                    <div class="downloads-grid" id="dynamicGamesGrid">
+                    </div>
+                </div>
+
             </div>
 
         </div>
@@ -375,16 +467,12 @@
         else document.getElementById("nombreUsuarioDisplay").textContent = nombre;
 
         if (rol && rol.toLowerCase().includes('admin')) {
-            const btnAdmin = document.getElementById('btnAdmin');
-            const btnRecursos = document.getElementById('btnRecursos');
-            if (btnAdmin) btnAdmin.style.display = 'block';
-            if (btnRecursos) btnRecursos.style.display = 'block';
+            document.getElementById('btnAdmin').style.display = 'block';
+            document.getElementById('btnRecursos').style.display = 'block';
         }
 
-        // Elementos del DOM
         const launcherView = document.getElementById('launcherView');
         const downloadView = document.getElementById('downloadView');
-
         const gameTitle = document.getElementById('gameTitle');
         const gameDesc = document.getElementById('gameDesc');
         const gameIcon = document.getElementById('gameIcon');
@@ -393,26 +481,25 @@
         const URL_ESTIMULACION = "https://proyecto-vinculacion.vercel.app/";
         const URL_PALABRAS = "https://sistemajuegodepalabras.vercel.app/";
 
-        // Iniciar en la primera pestaña
         verJuego('estimulacion', document.querySelector('.game-btn.active'));
 
         function verJuego(tipo, btn) {
             ocultarTodo();
             actBtn(btn);
 
-            // Mostrar siempre la tarjeta Launcher
+            // Mostrar siempre Launcher
             launcherView.style.display = 'flex';
 
             if (tipo === 'estimulacion') {
                 gameTitle.textContent = "Estimulación Cognitiva";
                 gameDesc.textContent = "Juego interactivo diseñado para fortalecer la memoria y la atención.";
-                gameIcon.innerHTML = '<i class="fas fa-puzzle-piece"></i>'; // Icono Puzzle
+                gameIcon.innerHTML = '<i class="fas fa-puzzle-piece"></i>';
                 launchLink.href = URL_ESTIMULACION;
             }
             else if (tipo === 'palabras') {
                 gameTitle.textContent = "Juego de Palabras";
                 gameDesc.textContent = "Actividad enfocada en el vocabulario y la agilidad mental.";
-                gameIcon.innerHTML = '<i class="fas fa-font"></i>'; // Icono Letra
+                gameIcon.innerHTML = '<i class="fas fa-font"></i>';
                 launchLink.href = URL_PALABRAS;
             }
         }
@@ -420,7 +507,8 @@
         function verDescargas(btn) {
             ocultarTodo();
             actBtn(btn);
-            downloadView.style.display = 'flex';
+            // Mostrar Descargas con 'block' para que funcione el scroll
+            downloadView.style.display = 'block';
         }
 
         function ocultarTodo() {
@@ -432,6 +520,46 @@
             document.querySelectorAll('.game-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
         }
+
+        // CARGA DINÁMICA
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const res = await fetch('/api/recursos');
+                const recursos = await res.json();
+
+                const dynamicSection = document.getElementById('dynamicGamesSection');
+                const dynamicGrid = document.getElementById('dynamicGamesGrid');
+                let hasGames = false;
+
+                recursos.forEach(r => {
+                    if (r.tipo === 'juego') {
+                        hasGames = true;
+
+                        const card = document.createElement('div');
+                        card.className = 'download-card';
+                        card.innerHTML = `
+                            <span class="new-badge">NUEVO</span>
+                            <div class="card-content">
+                                <div class="download-icon"><i class="fas fa-gamepad"></i></div>
+                                <h3>${r.titulo}</h3>
+                                <p>${r.descripcion || 'Juego adicional cargado.'}</p>
+                            </div>
+                            <a href="/descargas/${r.archivo}" class="download-link-btn" download>
+                                <i class="fas fa-download"></i> Descargar
+                            </a>
+                        `;
+                        dynamicGrid.appendChild(card);
+                    }
+                });
+
+                if (hasGames) {
+                    dynamicSection.style.display = 'block';
+                }
+
+            } catch (error) {
+                console.error("Error cargando juegos dinámicos", error);
+            }
+        });
     </script>
 </body>
 
